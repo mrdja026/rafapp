@@ -1,27 +1,16 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native'
 import { Container, Header, Content, Button, Text } from 'native-base';
-import { connect } from 'react-redux';
-import { login } from './actionCreator';
-class Login extends Component {
+
+export default class Register extends Component {
     static navigationOptions = {
         header: null,
     }
     constructor(props) {
         super(props);
     }
-
-    componentWillMount() {
-        if (this.props.userLogedIn) {
-            this.props.navigation.navigate('App');
-        } else {
-
-        }
-    }
-
     onPress = () => {
-        // console.log('this', this.props.navigation.navigate('App'));
-        this.props.login();
+        console.log('Press button');
     }
     render() {
         return (
@@ -31,7 +20,7 @@ class Login extends Component {
                 </Header>
                 <View style={styles.content}>
                     <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
-                        <Text> Login  </Text>
+                        <Text> Register  </Text>
                     </Button>
                 </View>
             </Container>
@@ -51,20 +40,3 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 })
-
-mapStateToProps = (state) => {
-    let { auth } = state.auth;
-    return {
-        ...auth,
-    }
-}
-
-mapDispatchToProps = (dispatch) => {
-    return {
-        login: () => (dispatch(login())),
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
-
-
