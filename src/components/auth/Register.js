@@ -1,28 +1,68 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native'
-import { Container, Header, Content, Button, Text } from 'native-base';
+import { Container, Header, Content, Button, Text, Label, Input, Form, Item } from 'native-base';
+import { register } from './actionCreator';
+import { connect } from 'react-redux';
 
-export default class Register extends Component {
+class Register extends Component {
     static navigationOptions = {
         header: null,
     }
     constructor(props) {
         super(props);
+        this.state = {
+            username: '',
+            email: 'test@test.com',
+            password: 'smederevo026',
+
+        }
     }
     onPress = () => {
-        console.log('Press button');
+        this.props.register(this.state.email, this.state.password);
+    }
+
+    onChangeEmail = (text) => {
+        this.setState({
+            email: text,
+        })
+    }
+    onChangePassword = (text) => {
+        this.setState({
+            password: text,
+        })
+    }
+    onUserNameChange = (text) => {
+        this.setState({
+            username: text,
+        })
     }
     render() {
         return (
             <Container>
                 <Header style={styles.header}>
-                    <Text> Raf app </Text>
+                    <Text> Create new account </Text>
                 </Header>
-                <View style={styles.content}>
-                    <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
-                        <Text> Register  </Text>
-                    </Button>
-                </View>
+                <Content contentContainerStyle={null}>
+                    <Form style={styles.form}>
+                        <Item floatingLabel>
+                            <Label> Username </Label>
+                            <Input onChangeText={this.onUserNameChange} value={this.state.username} />
+                        </Item>
+                        <Item floatingLabel>
+                            <Label> Email </Label>
+                            <Input onChangeText={this.onChangeEmail} value={this.state.email} />
+                        </Item>
+                        <Item floatingLabel last>
+                            <Label> Password </Label>
+                            <Input onChangeText={this.onChangePassword} value={this.state.password} secureTextEntry={true} />
+                        </Item>
+                    </Form>
+                    <View style={styles.content}>
+                        <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
+                            <Text> Register  </Text>
+                        </Button>
+                    </View>
+                </Content>
             </Container>
         )
     }
@@ -33,6 +73,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    form: {
+        paddingBottom: 10
+    },
     content: {
         flex: 1,
         flexDirection: 'column',
@@ -40,3 +83,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     }
 })
+
+mapStateToProps = (state) => {
+    return {
+
+    }
+}
+
+mapDispatchToProps = (dispatch) => {
+    return {
+        register: (email, password) => (dispatch(register(email, password)))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

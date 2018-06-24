@@ -4,12 +4,16 @@ import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Home from '../home/Home';
 import { setTopLevelNavigator } from './NavigationService';
+import TestComponent from '../home/TestScreen';
 
 
 const AppNavigation = DrawerNavigator({
     screen: StackNavigator({
         Home: {
             screen: Home,
+        },
+        NotHome: {
+            screen: TestComponent,
         }
     })
 })

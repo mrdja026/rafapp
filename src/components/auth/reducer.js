@@ -6,6 +6,7 @@ const initState = {
 }
 
 const auth = (state = initState, action) => {
+    console.log('Action', action);
     switch (action.type) {
         case LOGIN: {
             return { ...state, userLogedIn: true };

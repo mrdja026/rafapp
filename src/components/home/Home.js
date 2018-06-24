@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native'
 import { Container, Header, Content, Button, Text } from 'native-base';
+import { navigate } from '../router/NavigationService';
 
 export default class Home extends Component {
     static navigationOptions = {
@@ -10,7 +11,8 @@ export default class Home extends Component {
         super(props);
     }
     onPress = () => {
-        console.log('Press button');
+        //console.log('Press button');
+        navigate('NotHome');
     }
     render() {
         return (
