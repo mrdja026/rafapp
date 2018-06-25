@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native'
-import { Container, Header, Content, Button, Text } from 'native-base';
+import { Container, Header, Content, Button, Text, Input, Item } from 'native-base';
 import { navigate } from '../router/NavigationService';
-
-export default class Home extends Component {
+import { connect } from 'react-redux';
+import BackgroundView from '../elements/view/BackgroundView';
+class Home extends Component {
     static navigationOptions = {
         header: null,
     }
@@ -17,19 +18,27 @@ export default class Home extends Component {
     render() {
         return (
             <Container>
-                <Header style={styles.header}>
-                    <Text> Home component?? </Text>
-                </Header>
-                <View style={styles.content}>
-                    <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
-                        <Text> Home  </Text>
-                    </Button>
-                </View>
+                <BackgroundView>
+                    <Content contentContainerStyle={styles.content}>
+                        <Header transparent style={styles.header}>
+                            <Text> Home component?? </Text>
+                        </Header>
+                        <View style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center' }}>
+                            <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
+                                <Text> Home  </Text>
+                            </Button>
+                            <Text> {JSON.stringify(this.props.user)}  </Text>
+                            <Item>
+                                <Input value={'CLOASODAOSDOAS'} />
+                            </Item>
+                        </View>
+
+                    </Content>
+                </BackgroundView>
             </Container>
         )
     }
 }
-
 const styles = StyleSheet.create({
     header: {
         justifyContent: 'center',
@@ -39,6 +48,20 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
     }
-})
+});
+
+mapStateToProps = (state) => {
+    let { auth } = state.auth;
+    return {
+        ...auth
+    }
+}
+
+mapDispatchToProps = () => {
+    return {
+
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

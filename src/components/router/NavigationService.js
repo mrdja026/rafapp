@@ -15,3 +15,11 @@ export const navigate = (routeName, params) => {
     );
 }
 
+export const getNavigator = () => {
+    return _navigator;
+}
+
+export const goBack = () => {
+    console.log(_navigator);
+}
+

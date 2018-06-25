@@ -17,6 +17,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
+    console.log('Main app');
   }
 
   render() {

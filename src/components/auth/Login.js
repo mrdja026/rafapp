@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native'
-import { Container, Header, Content, Button, Text, Form, Item, Input, Label } from 'native-base';
+import { StyleSheet, View, ImageBackground } from 'react-native'
+import { Container, Content, Button, Text, Form, Item, Input, Label, Spinner } from 'native-base';
 import { connect } from 'react-redux';
-import { login } from './actionCreator';
-import { navigate } from '../router/NavigationService';
+import { login, userAuthChanged } from './actionCreator';
+import { navigate, goBack } from '../router/NavigationService';
+import firebase from 'react-native-firebase';
+import BackgroundView from '../elements/view/BackgroundView';
 class Login extends Component {
     static navigationOptions = {
         header: null,
@@ -16,11 +18,24 @@ class Login extends Component {
         }
     }
 
+    componentDidMount() {
+        this.onAuthChanged = firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.props.userAuthChanged(user);
+            } else {
+                let user = {
+                    logedIn: false
+                }
+                this.props.userAuthChanged(user);
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        this.onAuthChanged();
+    }
+
     componentWillMount() {
-        if (this.props.userLogedIn) {
-            this.props.navigation.navigate('App');
-        } else {
-        }
     }
 
     onUserNameChange = (text) => {
@@ -47,35 +62,43 @@ class Login extends Component {
     render() {
         return (
             <Container>
-                <Header style={styles.header}>
-                    <Text> Login </Text>
-                </Header>
-                <Content contentContainerStyle={null}>
-                    <Form style={styles.form}>
-                        <Item floatingLabel>
-                            <Label> Username </Label>
-                            <Input onChangeText={this.onUserNameChange} value={this.state.username} />
-                        </Item>
-                        <Item floatingLabel last>
-                            <Label> Password </Label>
-                            <Input onChangeText={this.onPasswordChanged} value={this.state.password} secureTextEntry={true} />
-                        </Item>
-                    </Form>
-                    <View style={styles.content}>
-                        <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
-                            <Text> Login  </Text>
-                        </Button>
-                        <View style={styles.infoSection}>
-                            <View style={styles.horizontalText}>
-                                <Text> Create account</Text><Text onPress={this.register} style={styles.linkTextColor}> here! </Text>
+                {!this.props.loading &&
+                    <BackgroundView>
+                        <Content contentContainerStyle={styles.loginForm}>
+                            <View style={{ flex: 1, justifyContent: 'center' }}>
+                                <Form style={styles.form}>
+                                    <Item floatingLabel>
+                                        <Label> Username </Label>
+                                        <Input onChangeText={this.onUserNameChange} value={this.state.username} />
+                                    </Item>
+                                    <Item floatingLabel last>
+                                        <Label> Password </Label>
+                                        <Input onChangeText={this.onPasswordChanged} value={this.state.password} secureTextEntry={true} />
+                                    </Item>
+                                </Form>
                             </View>
-                            <View style={styles.horizontalText}>
-                                <Text>Forgot your password, request new </Text><Text onPress={this.resetPass} style={styles.linkTextColor}> here! </Text>
+                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                                <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
+                                    <Text> Login  </Text>
+                                </Button>
+                                <View style={styles.infoSection}>
+                                    <View style={styles.horizontalText}>
+                                        <Text> Create account</Text><Text onPress={this.register} style={styles.linkTextColor}> here! </Text>
+                                    </View>
+                                    <View style={styles.horizontalText}>
+                                        <Text>Forgot your password, request new </Text><Text onPress={this.resetPass} style={styles.linkTextColor}> here! </Text>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                    </View>
-                </Content>
-            </Container>
+                        </Content>
+                    </BackgroundView>
+                }
+                {
+                    this.props.loading && <BackgroundView style={{ justifyContent: 'center', alignItems: 'center', alignSelf: 'auto' }}>
+                        <Spinner color='blue' />
+                    </BackgroundView>
+                }
+            </Container >
         )
     }
 }
@@ -85,15 +108,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    form: {
-        paddingBottom: 10
-    },
-    content: {
+    loginForm: {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
     },
+    form: {
+        paddingBottom: 10
+    },
+
     infoSection: {
         padding: 10,
     },
@@ -116,6 +139,7 @@ mapStateToProps = (state) => {
 mapDispatchToProps = (dispatch) => {
     return {
         login: (e, p) => (dispatch(login(e, p))),
+        userAuthChanged: (data) => (dispatch(userAuthChanged(data))),
     }
 }
 
