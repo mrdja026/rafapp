@@ -1,1 +1,1 @@
-export const ADD_MESSAGE = 'https://us-central1-raf-project-3c2bb.cloudfunctions.net/addMessage';
+export const ADD_MESSAGE = 'https://us-central1-rafappv1.cloudfunctions.net/addMessage';
