@@ -13,7 +13,7 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: 'test@test.com',
+            username: 'mrdjan1',
             password: 'smederevo026'
         }
     }
@@ -50,13 +50,29 @@ class Login extends Component {
         })
     }
 
+    checkAuth = () => {
+        fetch('http://10.0.2.2:3000/testAuth', { method: 'POST', credentials: 'same-origin' }).then((result) => {
+            console.log('OK', result);
+        }).catch(error => {
+            console.log('Test auth err', error);
+        })
+    }
+
     onPress = () => {
-        fetch('http://10.0.2.2:3000/home', {
-            method: 'GET'
+        fetch('http://10.0.2.2:3000/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: this.state.username,
+                password: this.state.password
+            })
         }).then((ok) => {
             console.log('result', ok);
         }).catch(error => {
-            console.log(error);
+            console.log('Login error', error);
         })
     }
     register = () => {
@@ -86,6 +102,9 @@ class Login extends Component {
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                                 <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
                                     <Text> Login  </Text>
+                                </Button>
+                                <Button style={{ alignSelf: 'auto' }} primary onPress={this.checkAuth}>
+                                    <Text> Check  </Text>
                                 </Button>
                                 <View style={styles.infoSection}>
                                     <View style={styles.horizontalText}>

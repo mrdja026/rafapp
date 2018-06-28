@@ -19,7 +19,7 @@ class Register extends Component {
     }
     onPress = () => {
         //this.props.register(this.state.email, this.state.password);
-        fetch('http://10.0.2.2:3000/home', {
+        fetch('http://10.0.2.2:3000/register', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

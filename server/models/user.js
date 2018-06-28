@@ -24,8 +24,8 @@ const UserSchema = new mongoose.Schema({
     // }
 });
 
-UserSchema.statics.authenticate = (email, password, callback) => {
-    User.findOne({ email: email })
+UserSchema.statics.authenticate = (username, password, callback) => {
+    User.findOne({ username: username })
         .exec(function (err, user) {
             if (err) {
                 return callback(err)
@@ -42,7 +42,7 @@ UserSchema.statics.authenticate = (email, password, callback) => {
                 }
             })
         });
-}
+};
 
 //hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {
@@ -57,4 +57,4 @@ UserSchema.pre('save', function (next) {
 });
 
 const User = mongoose.model('User', UserSchema);
-export default User;
+export default User; 
