@@ -11,14 +11,30 @@ class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
+            username: 'mrdjan',
             email: 'test@test.com',
             password: 'smederevo026',
 
         }
     }
     onPress = () => {
-        this.props.register(this.state.email, this.state.password);
+        //this.props.register(this.state.email, this.state.password);
+        fetch('http://10.0.2.2:3000/home', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'username': this.state.username,
+                'password': this.state.password,
+                'email': this.state.email,
+            })
+        }).then(success => {
+            console.log('success', success);
+        }).catch(error => {
+            console.log('error', error);
+        })
     }
 
     onChangeEmail = (text) => {

@@ -1,1 +1,3 @@
 com.mrdjan.rafreact
+
+---LOL : https://github.com/auth0/react-native-auth0/issues/67 

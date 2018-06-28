@@ -19,20 +19,20 @@ class Login extends Component {
     }
 
     componentDidMount() {
-        this.onAuthChanged = firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                this.props.userAuthChanged(user);
-            } else {
-                let user = {
-                    logedIn: false
-                }
-                this.props.userAuthChanged(user);
-            }
-        });
+        // this.onAuthChanged = firebase.auth().onAuthStateChanged((user) => {
+        //     if (user) {
+        //         this.props.userAuthChanged(user);
+        //     } else {
+        //         let user = {
+        //             logedIn: false
+        //         }
+        //         this.props.userAuthChanged(user);
+        //     }
+        // });
     }
 
     componentWillUnmount() {
-        this.onAuthChanged();
+        //this.onAuthChanged();
     }
 
     componentWillMount() {
@@ -51,7 +51,13 @@ class Login extends Component {
     }
 
     onPress = () => {
-        this.props.login(this.state.username, this.state.password);
+        fetch('http://10.0.2.2:3000/home', {
+            method: 'GET'
+        }).then((ok) => {
+            console.log('result', ok);
+        }).catch(error => {
+            console.log(error);
+        })
     }
     register = () => {
         navigate('Register');

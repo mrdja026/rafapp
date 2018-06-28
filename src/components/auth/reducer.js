@@ -4,7 +4,7 @@ import authManager from '../../auth/auth';
 
 const initState = {
     userLogedIn: false,
-    loading: true,
+    loading: false,
 }
 
 const auth = (state = initState, action) => {
