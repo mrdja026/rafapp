@@ -25,6 +25,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.statics.authenticate = (username, password, callback) => {
+    debugger;
     User.findOne({ username: username })
         .exec(function (err, user) {
             if (err) {

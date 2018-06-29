@@ -2,15 +2,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
-import Router from './routes/router';
-let mongoWithSession = MongoStore(session);
+var MongoStore = require('connect-mongo')(session);
+import auth from './routes/auth';
 
 const PORT = 3000;
 const SECRET = '2DCoNci2jmVRLFeXRNfaozev3AfLpxDjh0sfMXGY4K4SNlIuE5KATVPrryllAfH0KVVzSVrJMsaPLv4QcgI7wwIBhWCZtGaMrWTX';
 
 const App = express();
-
+App.use(bodyParser.json());
 mongoose.connect('mongodb://localhost/raf-app');
 var db = mongoose.connection;
 db.on('error', (error) => { console.error('Server to db connection failed', error) });
@@ -19,14 +18,18 @@ db.once('open', () => { console.log('Server db connection: OK') })
 
 
 App.use(session({
-    secret: 'keyboard cat',
+    secret: SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
+    cookie: { secure: false },
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection,
+        collection: 'session',
+    })
 }));
-App.use(bodyParser.json());
+
 App.use(bodyParser.urlencoded({ extended: false }));
-App.use('/', Router);
+App.use('/', auth);
 
 
 
@@ -43,8 +46,6 @@ App.use((err, req, res, next) => {
     res.status(err.status || 500);
     res.send(err.message);
 });
-
-
 App.listen(PORT, () => {
     console.log('Server running port ' + PORT);
 })

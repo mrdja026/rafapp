@@ -1,1 +1,3 @@
-export const ADD_MESSAGE = 'https://us-central1-rafappv1.cloudfunctions.net/addMessage';
+export const LOGIN = 'http://10.0.2.2:3000/login';
+export const LOGOUT = 'http://10.0.2.2:3000/logout';
+export const REGISTER = 'http://10.0.2.2:3000/register';

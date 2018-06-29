@@ -1,18 +1,7 @@
 import express from 'express';
 import User from '../models/user';
+import { checkAuth, responseHeader, HTTP_UNAUTHORIZED } from '../utls/apiUtils';
 const Router = express.Router();
-const HTTP_UNAUTHORIZED = 401;
-
-const checkAuth = (req, res, next) => {
-    if (req.session && req.session.userId) {
-        return next();
-    } else {
-        let error = new Error('Auth failed');
-        error.status = HTTP_UNAUTHORIZED;
-        return next(error);
-    }
-}
-
 Router.post('/register', function (req, res, next) {
     let { username, email, password } = req.body;
     let response = {};
@@ -29,7 +18,7 @@ Router.post('/register', function (req, res, next) {
 
 Router.post('/login', (req, res, next) => {
     let { username, password } = req.body;
-    console.log(req.body, res);
+    let _res = res;
     User.authenticate(username, password, (error, user, res) => {
         if (error || !user) {
             let error = new Error('Wrong email or password');
@@ -37,7 +26,7 @@ Router.post('/login', (req, res, next) => {
             return next(error);
         } else {
             req.session.userId = user._id;
-            return res({ ok: true });
+            return _res.send({ ok: true });
         }
     })
 });
@@ -48,14 +37,12 @@ Router.post('/logout', (req, res, next) => {
             if (error) {
                 return next(error);
             } else {
-                return res({ ok: true })
+                return res.send({ ok: true })
             }
         })
     }
 });
-
-Router.post('/testAuth', checkAuth, (req, res, next) => {
-    res.send('OK');
+Router.post('/testAuth', checkAuth, responseHeader, (req, res, next) => {
+    return res.json({ result: [1,2,3,4,5] });
 })
-
 export default Router;

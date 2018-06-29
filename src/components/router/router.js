@@ -53,6 +53,7 @@ export default class AppNavigator extends Component {
     }
 
     onBackPress = () => {
+        console.log('Back action');
         let navigation = getNavigator();
         let { nav } = navigation.state;
         let { dispatch } = navigation;
