@@ -18,23 +18,7 @@ class Register extends Component {
         }
     }
     onPress = () => {
-        //this.props.register(this.state.email, this.state.password);
-        fetch('http://10.0.2.2:3000/register', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                'username': this.state.username,
-                'password': this.state.password,
-                'email': this.state.email,
-            })
-        }).then(success => {
-            console.log('success', success);
-        }).catch(error => {
-            console.log('error', error);
-        })
+        this.props.register(this.state.username, this.state.email, this.state.password);
     }
 
     onChangeEmail = (text) => {
@@ -108,7 +92,7 @@ mapStateToProps = (state) => {
 
 mapDispatchToProps = (dispatch) => {
     return {
-        register: (email, password) => (dispatch(register(email, password)))
+        register: (username, email, password) => (dispatch(register(username, email, password)))
     }
 }
 

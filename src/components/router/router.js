@@ -4,6 +4,7 @@ import { StackNavigator, DrawerNavigator, NavigationActions } from 'react-naviga
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Home from '../home/Home';
+import UserDetails from '../user/UserDetails';
 import { setTopLevelNavigator, getNavigator } from './NavigationService';
 import TestComponent from '../home/TestScreen';
 
@@ -12,6 +13,9 @@ const AppNavigation = DrawerNavigator({
     App: StackNavigator({
         Home: {
             screen: Home,
+        },
+        UserDetails: {
+            screen: UserDetails,
         },
         NotHome: {
             screen: TestComponent,

@@ -5,6 +5,7 @@ import { navigate } from '../router/NavigationService';
 import { connect } from 'react-redux';
 import BackgroundView from '../elements/view/BackgroundView';
 import { ADD_MESSAGE } from '../../api/api';
+import authManager from '../../auth/auth';
 class Home extends Component {
     static navigationOptions = {
         header: null,
@@ -16,13 +17,6 @@ class Home extends Component {
         }
     }
     onPress = () => {
-        //console.log('Press button');
-        // navigate('NotHome');
-        fetch(ADD_MESSAGE + '/?text=' + this.state.message, {}).then(result => {
-            console.log('Message result', result);
-        }).catch(error => {
-            console.log('Message error', error);
-        })
     }
     onChangeMessage = (text) => {
         this.setState({ message: text });
@@ -33,7 +27,7 @@ class Home extends Component {
                 <BackgroundView>
                     <Content contentContainerStyle={styles.content}>
                         <Header transparent style={styles.header}>
-                            <Text> Home component?? </Text>
+                            <Text> Welcome {this.props.user.username} </Text>
                         </Header>
                         <View style={{ flex: 1, justifyContent: 'space-around', alignItems: 'center' }}>
                             <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>

@@ -2,18 +2,19 @@ import express from 'express';
 import User from '../models/user';
 import { checkAuth, responseHeader, HTTP_UNAUTHORIZED } from '../utls/apiUtils';
 const Router = express.Router();
+
 Router.post('/register', function (req, res, next) {
     let { username, email, password } = req.body;
     let response = {};
+    let _res = res;
     User.create({ username, email, password }, (error, user) => {
+        console.log(username, password, email, error);
         if (error) {
-            response = { OK: false }
+            _res.send({ OK: false });
         } else {
-            response = { OK: true, user: user };
+            _res.send({ OK: true });
         }
     });
-
-    res.send(response);
 });
 
 Router.post('/login', (req, res, next) => {
@@ -23,10 +24,11 @@ Router.post('/login', (req, res, next) => {
         if (error || !user) {
             let error = new Error('Wrong email or password');
             error.status = HTTP_UNAUTHORIZED;
-            return next(error);
+            error.message = 'Wrong email or password';
+            return _res.send(error);
         } else {
             req.session.userId = user._id;
-            return _res.send({ ok: true });
+            return _res.send({ loginStatus: true, user: user });
         }
     })
 });
@@ -43,6 +45,6 @@ Router.post('/logout', (req, res, next) => {
     }
 });
 Router.post('/testAuth', checkAuth, responseHeader, (req, res, next) => {
-    return res.json({ result: [1,2,3,4,5] });
+    return res.json({ result: [1, 2, 3, 4, 5] });
 })
 export default Router;

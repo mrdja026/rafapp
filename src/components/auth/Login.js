@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, ImageBackground } from 'react-native'
 import { Container, Content, Button, Text, Form, Item, Input, Label, Spinner } from 'native-base';
 import { connect } from 'react-redux';
-import { login, userAuthChanged } from './actionCreator';
+import { login, userAuthChanged, checkUserCredentials } from './actionCreator';
 import { navigate, goBack } from '../router/NavigationService';
 import BackgroundView from '../elements/view/BackgroundView';
 class Login extends Component {
@@ -18,6 +18,7 @@ class Login extends Component {
     }
 
     componentDidMount() {
+        this.props.checkUserAuth();
     }
 
     componentWillUnmount() {
@@ -37,63 +38,14 @@ class Login extends Component {
             password: text,
         })
     }
-
-    checkAuth = () => {
-        fetch('http://10.0.2.2:3000/testAuth', {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            credentials: 'same-origin'
-        }).then((result) => {
-            console.log('skk', result);
-            result.json().then((json) => {
-                console.log('JSONSS', json);
-            })
-        }).catch(error => {
-            console.log('Test auth err', error);
-        })
-    }
-
     onPress = () => {
-        fetch('http://10.0.2.2:3000/login', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-            })
-        }).then((ok) => {
-            console.log('result', ok);
-        }).catch(error => {
-            console.log('Login error', error);
-        })
+        this.props.login(this.state.username, this.state.password);
     }
-    logout = () => {
-        fetch('http://10.0.2.2:3000/logout', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin',
-        }).then((ok) => {
-            console.log('result', ok);
-        }).catch(error => {
-            console.log('Logout error', error);
-        })
-    }
-
     register = () => {
         navigate('Register');
     }
     resetPass = () => {
-        console.log('Reset pass?');
+        //console.log('Reset pass?');
     }
     render() {
         return (
@@ -116,12 +68,6 @@ class Login extends Component {
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                                 <Button style={{ alignSelf: 'auto' }} primary onPress={this.onPress}>
                                     <Text> Login  </Text>
-                                </Button>
-                                <Button style={{ alignSelf: 'auto' }} primary onPress={this.checkAuth}>
-                                    <Text> Check  </Text>
-                                </Button>
-                                <Button style={{ alignSelf: 'auto' }} primary onPress={this.logout}>
-                                    <Text> Logout  </Text>
                                 </Button>
                                 <View style={styles.infoSection}>
                                     <View style={styles.horizontalText}>
@@ -182,6 +128,7 @@ mapDispatchToProps = (dispatch) => {
     return {
         login: (e, p) => (dispatch(login(e, p))),
         userAuthChanged: (data) => (dispatch(userAuthChanged(data))),
+        checkUserAuth: () => (dispatch(checkUserCredentials())),
     }
 }
 

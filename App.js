@@ -1,11 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-redux'
 import store from './src/store';
-import { StyleSheet, Platform, Image, Text, View, ScrollView } from 'react-native';
-import Expo from 'react'
-import firebase from 'react-native-firebase';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import AppNavigator from './src/components/router/router';
-
+console.disableYellowBox = true;
 export default class App extends React.Component {
   constructor() {
     super();
