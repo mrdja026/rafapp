@@ -10,9 +10,9 @@ Router.post('/register', function (req, res, next) {
     User.create({ username, email, password }, (error, user) => {
         console.log(username, password, email, error);
         if (error) {
-            _res.send({ OK: false });
+            _res.send({ OK: false, user: user, });
         } else {
-            _res.send({ OK: true });
+            _res.send({ OK: true, user: user });
         }
     });
 });
@@ -22,11 +22,13 @@ Router.post('/login', (req, res, next) => {
     let _res = res;
     User.authenticate(username, password, (error, user, res) => {
         if (error || !user) {
-            let error = new Error('Wrong email or password');
+            console.log('Callback user not found');
+            error.ok = false;
             error.status = HTTP_UNAUTHORIZED;
             error.message = 'Wrong email or password';
-            return _res.send(error);
+            return next(error);
         } else {
+            console.log('User found');
             req.session.userId = user._id;
             return _res.send({ loginStatus: true, user: user });
         }
@@ -46,5 +48,5 @@ Router.post('/logout', (req, res, next) => {
 });
 Router.post('/testAuth', checkAuth, responseHeader, (req, res, next) => {
     return res.json({ result: [1, 2, 3, 4, 5] });
-})
+});
 export default Router;

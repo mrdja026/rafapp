@@ -1,7 +1,7 @@
 import { navigate } from "../router/NavigationService";
 import firebase from "react-native-firebase";
 import authManager, { USER_DATA } from "../../auth/auth";
-import { LOGIN_SERVICE, REGISTER_SERVICE } from "../../api/api";
+import { LOGIN_SERVICE, REGISTER_SERVICE, GET_USER_SERVICE } from "../../api/api";
 import { myFetch } from "../../api/utils";
 import { getStorageItem } from "../../storage";
 
@@ -16,11 +16,12 @@ export const login = (email, password, firstLogin = false) => {
                 method: 'POST',
             }, { username: email, password: password });
             if (loginResult.loginStatus) {
+                console.log('Login result', loginResult);
                 let { user } = loginResult;
                 user.logedIn = true;
                 authManager.setUser(user);
                 dispatch({ type: LOGIN });
-                if (!firstLogin) {
+                if (false) {
                     navigate('App');
                 } else {
                     navigate('UserDetails');
@@ -59,9 +60,22 @@ export const checkUserCredentials = () => {
             if (!_user) {
                 dispatch({ type: LOGOUT });
             } else {
-                authManager.setUser(_user);
-                dispatch({ type: LOGIN });
-                navigate('App');
+                let { id } = user;
+                try {
+                    let userDetails = await myFetch(GET_USER_SERVICE, { method: 'POST' }, { id: id });
+                    if (userDetails.ok) {
+                        let { user } = userDetails;
+                        authManager.setUser(user);
+                        dispatch({ type: LOGIN });
+                        if (user.firstLogin) {
+                            navigate('UserDetails');
+                        } else {
+                            navigate('App');
+                        }
+                    }
+                } catch (error) {
+                    dispatch({ type: LOGOUT });
+                }
             }
         } catch (error) {
             console.log('Error while checking user data', error);

@@ -5,7 +5,7 @@ const DELETE = 'DELETE'//hehe
 
 export const myFetch = async (service, requestConfig, requestParams) => {
     let requestData = getRequestData(requestConfig, requestParams);
-    console.log('Request to be made', requestData);
+    console.log('Request to be made', service, requestData);
     let promise = new Promise((resolve, reject) => {
         fetch(service, requestData).then(response => {
             if (response.ok) {

@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 var MongoStore = require('connect-mongo')(session);
 import auth from './routes/auth';
+import user from './routes/userservice';
 
 const PORT = 3000;
 const SECRET = '2DCoNci2jmVRLFeXRNfaozev3AfLpxDjh0sfMXGY4K4SNlIuE5KATVPrryllAfH0KVVzSVrJMsaPLv4QcgI7wwIBhWCZtGaMrWTX';
@@ -30,6 +31,7 @@ App.use(session({
 
 App.use(bodyParser.urlencoded({ extended: false }));
 App.use('/', auth);
+App.use('/', user);
 
 
 
@@ -48,4 +50,4 @@ App.use((err, req, res, next) => {
 });
 App.listen(PORT, () => {
     console.log('Server running port ' + PORT);
-})
+});

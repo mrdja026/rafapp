@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import { HTTP_RA_EXCEPTION } from '../utls/apiUtils';
 
 const UserSchema = new mongoose.Schema({
     email: {
@@ -18,6 +19,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    firstLogin: {
+        type: Boolean,
+    },
+    bio: {
+        type: String,
+    },
+    avatarUri: {
+        type: String,
+    }
     // passwordConf: {
     //     type: String,
     //     required: true,
@@ -25,7 +35,6 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.statics.authenticate = (username, password, callback) => {
-    debugger;
     User.findOne({ username: username })
         .exec(function (err, user) {
             if (err) {
@@ -45,6 +54,36 @@ UserSchema.statics.authenticate = (username, password, callback) => {
         });
 };
 
+UserSchema.statics.updateById = (userData, callback) => {
+    if (!userData.id) {
+        let err = new Error('User id not valid');
+        err.status = HTTP_RA_EXCEPTION;
+        return callback(err);
+    }
+    User.findById(id)
+        .exec(function (err, user) {
+            if (err) {
+                return callback(err);
+            } else if (!user) {
+                var err = new Error('User not found');
+                err.status = HTTP_RA_EXCEPTION;
+                return callback(err);
+            }
+            delete userData.id;
+            if (userData.avatarUri.length <= 0) {
+                delete userData.avatarUri;
+            }
+            user = Object.assign(user, userData);
+            user.save(function (err, updated) {
+                if (err) {
+                    return callback(err);
+                } else {
+                    return callback(null, updated);
+                }
+            });
+        });
+}
+
 //hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {
     var user = this;
@@ -53,6 +92,7 @@ UserSchema.pre('save', function (next) {
             return next(err);
         }
         user.password = hash;
+        user.firstLogin = true;
         next();
     })
 });

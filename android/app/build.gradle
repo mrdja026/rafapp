@@ -166,6 +166,8 @@ dependencies {
     implementation "com.google.firebase:firebase-perf:15.1.0"
     implementation "com.google.firebase:firebase-storage:15.0.2"
     
+	compile project(':react-native-image-picker')
+	
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }

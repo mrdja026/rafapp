@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux'
 import store from './src/store';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 import AppNavigator from './src/components/router/router';
 console.disableYellowBox = true;
 export default class App extends React.Component {
@@ -15,7 +15,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Main app');
+
   }
 
   render() {
