@@ -5,6 +5,14 @@ import session from 'express-session';
 var MongoStore = require('connect-mongo')(session);
 import auth from './routes/auth';
 import user from './routes/userservice';
+import cloudinary from 'cloudinary';
+import assets from './routes/assets';
+
+cloudinary.config({
+    cloud_name: 'ditc89gcc',
+    api_key: '132562888723164',
+    api_secret: 'ATnok_qA0gPP3TwqE8xefuY7dQo'
+});
 
 const PORT = 3000;
 const SECRET = '2DCoNci2jmVRLFeXRNfaozev3AfLpxDjh0sfMXGY4K4SNlIuE5KATVPrryllAfH0KVVzSVrJMsaPLv4QcgI7wwIBhWCZtGaMrWTX';
@@ -32,6 +40,7 @@ App.use(session({
 App.use(bodyParser.urlencoded({ extended: false }));
 App.use('/', auth);
 App.use('/', user);
+App.use('/', assets)
 
 
 

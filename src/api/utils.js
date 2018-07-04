@@ -9,10 +9,8 @@ export const myFetch = async (service, requestConfig, requestParams) => {
     let promise = new Promise((resolve, reject) => {
         fetch(service, requestData).then(response => {
             if (response.ok) {
-                console.log('Request ok response', response);
                 return response.json();
             } else {
-                console.log('Response not ok', response);
                 reject(response);
             }
         }).then(responseJson => {

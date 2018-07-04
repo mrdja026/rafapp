@@ -1,16 +1,18 @@
 import express from 'express';
 import User from '../models/user';
 import { checkAuth, responseHeader, HTTP_UNAUTHORIZED, HTTP_RA_EXCEPTION } from '../utls/apiUtils';
+import { uploadAsset } from '../utls/cloudinaryUtils';
 const UserService = express.Router();
 UserService.post('/updateUser', checkAuth, responseHeader, (req, res, next) => {
     let userData = req.body.userData;
-    User.updateById(id, prop, value, (error, user) => {
+    let _res = res;
+    User.updateById(userData, (error, user) => {
         if (error) {
             return next(error);
         } else {
             return _res.send({ ok: true, user: user });
         }
-    })
+    });
 });
 
 UserService.post('/getUserData', checkAuth, responseHeader, (req, res, next) => {

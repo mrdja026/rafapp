@@ -21,10 +21,10 @@ export const login = (email, password, firstLogin = false) => {
                 user.logedIn = true;
                 authManager.setUser(user);
                 dispatch({ type: LOGIN });
-                if (false) {
-                    navigate('App');
-                } else {
+                if (user.firstLogin) {
                     navigate('UserDetails');
+                } else {
+                    navigate('App');
                 }
             } else {
                 dispatch({ type: LOGOUT });

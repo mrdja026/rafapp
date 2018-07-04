@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Container, Header, Content, Form, Item, Label, Input, Button } from 'native-base';
 import BackgroundView from '../elements/view/BackgroundView';
 import { getWidth } from '../../screenManager';
 import { connect } from 'react-redux';
 import { myFetch } from '../../api/utils';
 import ImagePicker from 'react-native-image-picker';
-import { UPDATE_USER_SERVICE } from '../../api/api';
-
+import { UPDATE_USER_SERVICE, CHANGE_PROFILE_PICTURE } from '../../api/api';
+import { navigate } from '../router/NavigationService';
 const CONFIRM_PASS_TEXT = 'Confirm new password';
 const CONFIRM_PASS_TEXT_MISSMATCH = 'Your passwords do not match';
 
@@ -24,7 +24,7 @@ class UserDetails extends Component {
             email: this.props.user.email,
             confirmPassError: false,
             avatarSource: {
-                uri: ''
+                uri: this.props.user.avatarUri
             }
         }
     }
@@ -46,7 +46,7 @@ class UserDetails extends Component {
         this.setState({ confirmNewPassword: text })
     }
 
-    imagePicker = () => {
+    imagePicker = async () => {
         let options = {
             title: 'Select Avatar',
             storageOptions: {
@@ -68,48 +68,58 @@ class UserDetails extends Component {
             }
             else {
                 let source = { uri: response.uri };
-
                 // You can also display the image using data:
                 // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-                this.setState({
-                    avatarSource: source
-                });
-                console.log('Image picked', response);
+                // this.setState({
+                //     avatarSource: source
+                // });
+                this.setState({ avatarLoading: true });
+                let data = {
+                    type: response.type,
+                    b64: response.data,
+                    userId: this.props.user._id,
+                }
+                myFetch(CHANGE_PROFILE_PICTURE, { method: 'POST' }, { data: data })
+                    .then(result => {
+                        console.log('Image result ', result);
+                        this.setState({
+                            avatarLoading: false,
+                            avatarSource: {
+                                uri: result.user.avatarUri,
+                            }
+                        })
+                    }).catch(error => {
+                        console.log(error);
+                        this.setState({
+                            avatarLoading: true
+                        });
+                    });
             }
         });
     }
 
     update = async () => {
-        // console.log('Updateeee', this.props.user, this.state.bio);
-        // myFetch('http://10.0.2.2:3000/updateUser', { method: 'POST' }, { id: '5b3a1e49b63aee3f0c32c567', prop: 'bio', value: this.state.bio }).then((result) => {
-        //     console.log('Result', result);
-        // }).catch(err => {
-        //     console.log('Errr', err);
-        // });
         if (this.state.newPassword.length > 0 && this.state.newPassword != this.state.confirmNewPassword) {
             this.setState({ confirmPassError: true });
             return;
         }
+        let reqObject = {
+            id: this.props.user._id,
+            email: this.state.email,
+            password: this.state.newPassword,
+            bio: this.state.bio,
+            firstLogin: 0,
+        }
         try {
-            let reqObject = {
-                id: this.props.user.id,
-                email: this.state.email,
-                password: this.state.newPassword,
-                bio: this.state.bio,
-                avatarUrl: this.state.avatarSource.uri
-            }
-            try {
-                let response = await myFetch(UPDATE_USER_SERVICE, { method: 'POST' }, {
-                    userData: { ...reqObject }
-                });
-                console.log('New user data?', response);
-            } catch (error) {
+            let response = await myFetch(UPDATE_USER_SERVICE, { method: 'POST' }, {
+                userData: { ...reqObject }
+            });
+            if (response.ok) {
+                navigate('Home');
             }
         } catch (error) {
-
+            console.error('Update use fail')
         }
-
     }
 
     render() {
@@ -131,6 +141,9 @@ class UserDetails extends Component {
                                             <Text>Choose profile picture</Text>
                                         </View>
                                     </TouchableOpacity>
+                                    {this.state.avatarLoading && <View style={{ position: 'absolute', flexDirection: 'column', top: 0, left: 0, justifyContent: 'center', alignItems: 'center' }}>
+                                        <ActivityIndicator style={{ alignSelf: 'auto' }} size={30} color={'white'} />
+                                    </View>}
                                 </View>
                             </View>
                             <View>
@@ -141,7 +154,7 @@ class UserDetails extends Component {
                                     </Item>
                                     <Item floatingLabel>
                                         <Label> Email </Label>
-                                        <Input value={this.state.email} />
+                                        <Input onChangeText={this.setNewEmail} value={this.state.email} />
                                     </Item>
                                     <Item floatingLabel style={{ height: 80 }}>
                                         <Label> Bio </Label>

@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
     },
     firstLogin: {
-        type: Boolean,
+        type: Number,
     },
     bio: {
         type: String,
@@ -28,10 +28,6 @@ const UserSchema = new mongoose.Schema({
     avatarUri: {
         type: String,
     }
-    // passwordConf: {
-    //     type: String,
-    //     required: true,
-    // }
 });
 
 UserSchema.statics.authenticate = (username, password, callback) => {
@@ -60,28 +56,51 @@ UserSchema.statics.updateById = (userData, callback) => {
         err.status = HTTP_RA_EXCEPTION;
         return callback(err);
     }
+
+    //TODO: remove this from here make change password API method;
+    if (userData.password && userData.password.length <= 0) {
+        delete userData.password;
+    }
+    User.findOneAndUpdate({ _id: userData.id }, { ...userData }, { new: true }, (err, user) => {
+        if (err) {
+            console.log('error', err);
+            return callback(err);
+        } else if (!user) {
+            var err = new Error('User not found');
+            err.status = HTTP_RA_EXCEPTION;
+            console.log('brah', err);
+            return callback(err);
+        }
+        console.log('New user', user);
+        return callback(null, user);
+    });
+}
+
+UserSchema.statics.updateUserAvatar = (id, avatarUri, callback) => {
+    if (!id || !avatarUri) {
+        let error = new Error('Parameter invalid');
+        error.status = HTTP_RA_EXCEPTION;
+        return callback(error);
+    }
     User.findById(id)
-        .exec(function (err, user) {
-            if (err) {
-                return callback(err);
+        .exec(function (error, user) {
+            if (error) {
+                return callback(error);
             } else if (!user) {
-                var err = new Error('User not found');
-                err.status = HTTP_RA_EXCEPTION;
-                return callback(err);
+                let u_error = new Error('User not found');
+                u_error.status = HTTP_RA_EXCEPTION;
+                return callback(u_error);
             }
-            delete userData.id;
-            if (userData.avatarUri.length <= 0) {
-                delete userData.avatarUri;
-            }
-            user = Object.assign(user, userData);
-            user.save(function (err, updated) {
+
+            user.avatarUri = avatarUri;
+            User.save(function (err, updated) {
                 if (err) {
                     return callback(err);
                 } else {
-                    return callback(null, updated);
+                    return callback(null, updated)
                 }
-            });
-        });
+            })
+        })
 }
 
 //hashing a password before saving it to the database
@@ -92,7 +111,8 @@ UserSchema.pre('save', function (next) {
             return next(err);
         }
         user.password = hash;
-        user.firstLogin = true;
+        user.firstLogin = 1;
+        user.avatarUri = '';
         next();
     })
 });

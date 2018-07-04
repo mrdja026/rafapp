@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import BackgroundView from '../elements/view/BackgroundView';
 import ImagePicker from 'react-native-image-picker';
 import { getWidth } from '../../screenManager';
+import { navigate } from '../router/NavigationService';
 class Home extends Component {
     static navigationOptions = {
         header: null,
@@ -27,6 +28,11 @@ class Home extends Component {
                     <Content contentContainerStyle={styles.content}>
                         <Header transparent style={styles.header}>
                             <Text> Welcome {this.props.user.username} </Text>
+
+                            <Button primary onPress={()=>{ navigate('UserDetails')}}>
+                                <Text> User details </Text>
+                            </Button>
+
                         </Header>
                     </Content>
                 </BackgroundView>
