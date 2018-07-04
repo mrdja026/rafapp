@@ -6,7 +6,10 @@ import Register from '../auth/Register';
 import Home from '../home/Home';
 import UserDetails from '../user/UserDetails';
 import { setTopLevelNavigator, getNavigator } from './NavigationService';
-import TestComponent from '../home/TestScreen';
+import TechnologyFeed from '../technology/TechnologyFeed';
+import FoodFeed from '../food/FoodFeed';
+import LifeStyleFeed from '../lifestyle/LifestyleFeed';
+import TopicAdd from '../elements/topic/TopicAdd';
 
 
 const AppNavigation = DrawerNavigator({
@@ -17,8 +20,17 @@ const AppNavigation = DrawerNavigator({
         UserDetails: {
             screen: UserDetails,
         },
-        NotHome: {
-            screen: TestComponent,
+        Tech: {
+            screen: TechnologyFeed,
+        },
+        Food: {
+            screen: FoodFeed
+        },
+        Lifestyle: {
+            screen: LifeStyleFeed,
+        },
+        NewTopic: {
+            screen: TopicAdd,
         }
     })
 })
