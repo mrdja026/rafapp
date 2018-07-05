@@ -2,11 +2,13 @@ import express from 'express';
 import { checkAuth, responseHeader } from '../utls/apiUtils';
 import Post from '../models/post';
 
+const SORT_CONDITION = '-createdOn'
+
 const PostRouter = express.Router();
 
 PostRouter.post('/getAll', checkAuth, responseHeader, (req, res, next) => {
     let { skip, take, category } = req.body;
-    Post.find({ category: category }, null, { skip: skip, limit: take }, (error, posts) => {
+    Post.find({ category: category }, null, { sort: SORT_CONDITION, skip: skip, limit: take }, (error, posts) => {
         if (error) {
             return next(error);
         } else {
@@ -18,7 +20,6 @@ PostRouter.post('/getAll', checkAuth, responseHeader, (req, res, next) => {
 
 PostRouter.post('/savePost', checkAuth, responseHeader, (req, res, next) => {
     let { title, textContent, userId, category } = req.body;
-    let _res = res;
     console.log('New post to add ', title, ' ', textContent, ' ', userId, ' ', category);
     Post.create({ title: title, textContent: textContent, userId: userId, category: category }, (error, post) => {
         if (error) {

@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
-
+import moment from 'moment';
 const PostSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
         trim: true,
     },
-    // createdOn: {
-    //     type: Date,
-    // },
+    createdOn: {
+        type: Number,
+    },
     category: {
         type: String,
         required: true,
@@ -33,6 +33,12 @@ const PostSchema = new mongoose.Schema({
         type: Number,
     }
 });
+
+PostSchema.pre('save', function (next) {
+    let post = this;
+    post.createdOn = moment().valueOf();
+    next();
+})
 
 const Post = mongoose.model('Post', PostSchema);
 export default Post;
