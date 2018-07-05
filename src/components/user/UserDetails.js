@@ -95,7 +95,6 @@ class UserDetails extends Component {
         let reqObject = {
             id: this.props.user._id,
             email: this.state.email,
-            password: this.state.newPassword,
             bio: this.state.bio,
             firstLogin: 0,
         }

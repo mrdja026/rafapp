@@ -3,9 +3,22 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Container, Header, Content } from 'native-base';
 import BackgroundView from '../elements/view/BackgroundView';
 import FeedFooter from '../elements/footer/FeedFooter';
+import { navigate } from '../router/NavigationService';
+import { myFetch } from '../../api/utils';
+import { GET_POST_SERVICE } from '../../api/api';
 class FoodFeed extends Component {
     static navigationOptions = {
         header: null,
+    }
+    onPress = () => {
+        navigate('NewTopic', { category: 'Food' })
+    }
+    componentDidMount() {
+        myFetch(GET_POST_SERVICE, { method: 'POST' }, { category: 'Food', skip: 0, take: 1 }).then((result) => {
+            console.log('Results', result);
+        }).catch(error => {
+            console.log('Errrrrrrrrrr', error);
+        })
     }
     render() {
         return (
@@ -18,7 +31,7 @@ class FoodFeed extends Component {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text>FoodFeed</Text>
                         </View>
-                        <FeedFooter />
+                        <FeedFooter category={'Food'} onPress={this.onPress} />
                     </Content>
                 </BackgroundView>
             </Container>

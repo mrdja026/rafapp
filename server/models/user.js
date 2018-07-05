@@ -36,6 +36,7 @@ UserSchema.statics.authenticate = (username, password, callback) => {
             if (err) {
                 return callback(err)
             } else if (!user) {
+
                 var err = new Error('User not found.');
                 err.status = 401;
                 return callback(err);
@@ -44,6 +45,7 @@ UserSchema.statics.authenticate = (username, password, callback) => {
                 if (result === true) {
                     return callback(null, user);
                 } else {
+                    console.log('Password error');
                     return callback();
                 }
             })
@@ -58,10 +60,10 @@ UserSchema.statics.updateById = (userData, callback) => {
     }
 
     //TODO: remove this from here make change password API method;
-    if (userData.password && userData.password.length <= 0) {
-        delete userData.password;
-    }
-    User.findOneAndUpdate({ _id: userData.id }, { ...userData }, { new: true }, (err, user) => {
+    // if (userData.password && userData.password.length <= 0) {
+    //     delete userData.password;    
+    // }
+    User.findOneAndUpdate({ _id: userData.id }, { ...userData }, { new: true, owerWrite: false }, (err, user) => {
         if (err) {
             console.log('error', err);
             return callback(err);
@@ -106,6 +108,7 @@ UserSchema.statics.updateUserAvatar = (id, avatarUri, callback) => {
 //hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {
     var user = this;
+    console.log('Password hashing');
     bcrypt.hash(user.password, 10, function (err, hash) {
         if (err) {
             return next(err);

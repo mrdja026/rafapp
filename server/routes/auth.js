@@ -23,6 +23,7 @@ Router.post('/login', (req, res, next) => {
     User.authenticate(username, password, (error, user, res) => {
         if (error || !user) {
             console.log('Callback user not found');
+            let error = new Error('User not found');
             error.ok = false;
             error.status = HTTP_UNAUTHORIZED;
             error.message = 'Wrong email or password';

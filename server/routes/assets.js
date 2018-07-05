@@ -30,5 +30,4 @@ AssetsRouter.post('/avatar', checkAuth, responseHeader, (req, res, next) => {
         }
     })
 });
-
 export default AssetsRouter;

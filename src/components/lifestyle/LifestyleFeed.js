@@ -3,10 +3,14 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Container, Content, Header } from 'native-base';
 import BackgroundView from '../elements/view/BackgroundView';
 import FeedFooter from '../elements/footer/FeedFooter';
+import { navigate } from '../router/NavigationService';
 
 class LifeStyleFeed extends Component {
     static navigationOptions = {
         header: null,
+    }
+    onPress = () => {
+        navigate('Lifestyle', { category: 'Lifestyle' })
     }
     render() {
         return (
@@ -19,7 +23,7 @@ class LifeStyleFeed extends Component {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Text>Lifestyle feed</Text>
                         </View>
-                        <FeedFooter />
+                        <FeedFooter category={'Lifestyle'} onPress={this.onPress} />
                     </Content>
                 </BackgroundView>
             </Container>

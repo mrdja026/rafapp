@@ -6,10 +6,16 @@ const PostSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    // createdOn: {
+    //     type: Date,
+    // },
     category: {
         type: String,
         required: true,
         enum: ['Food', 'Lifestyle', 'Tech']
+    },
+    score: {
+        type: Number
     },
     userId: {
         type: String,
@@ -19,7 +25,7 @@ const PostSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    mediaUrl: {
+    mediaContent: {
         type: String,
         trim: true,
     },

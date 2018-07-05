@@ -7,7 +7,7 @@ import auth from './routes/auth';
 import user from './routes/userservice';
 import cloudinary from 'cloudinary';
 import assets from './routes/assets';
-
+import post from './routes/postservice';
 cloudinary.config({
     cloud_name: 'ditc89gcc',
     api_key: '132562888723164',
@@ -41,7 +41,7 @@ App.use(bodyParser.urlencoded({ extended: false }));
 App.use('/', auth);
 App.use('/', user);
 App.use('/', assets)
-
+App.use('/post', post);
 
 
 // catch 404 and forward to error handler
