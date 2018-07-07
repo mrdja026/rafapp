@@ -54,7 +54,9 @@ class TopicAdd extends Component {
                 this.setState({
                     mediaContent: {
                         uri: response.responseData.uri,
-                    }
+                        b64: response.responseData.data,
+                        type: response.responseData.type,
+                    },
                 });
             }
         } catch (error) {
@@ -84,6 +86,7 @@ class TopicAdd extends Component {
             textContent: this.state.textContent,
             title: this.state.title,
             userId: this.props.user._id,
+            mediaContent: this.state.mediaContent,
         }
 
         try {

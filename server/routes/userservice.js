@@ -1,7 +1,6 @@
 import express from 'express';
 import User from '../models/user';
 import { checkAuth, responseHeader, HTTP_UNAUTHORIZED, HTTP_RA_EXCEPTION } from '../utls/apiUtils';
-import { uploadAsset } from '../utls/cloudinaryUtils';
 const UserService = express.Router();
 UserService.post('/updateUser', checkAuth, responseHeader, (req, res, next) => {
     let userData = req.body.userData;

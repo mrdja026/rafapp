@@ -10,6 +10,7 @@ import TechnologyFeed from '../technology/TechnologyFeed';
 import FoodFeed from '../food/FoodFeed';
 import LifeStyleFeed from '../lifestyle/LifestyleFeed';
 import TopicAdd from '../elements/topic/TopicAdd';
+import TopicView from '../elements/topic/TopicView';
 
 
 const AppNavigation = DrawerNavigator({
@@ -31,6 +32,9 @@ const AppNavigation = DrawerNavigator({
         },
         NewTopic: {
             screen: TopicAdd,
+        },
+        TopicView: {
+            screen: TopicView,
         }
     })
 })

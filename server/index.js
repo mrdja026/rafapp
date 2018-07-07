@@ -8,6 +8,7 @@ import user from './routes/userservice';
 import cloudinary from 'cloudinary';
 import assets from './routes/assets';
 import post from './routes/postservice';
+import comment from './routes/commentservice';
 cloudinary.config({
     cloud_name: 'ditc89gcc',
     api_key: '132562888723164',
@@ -42,6 +43,7 @@ App.use('/', auth);
 App.use('/', user);
 App.use('/', assets)
 App.use('/post', post);
+App.use('/comment', comment);
 
 
 // catch 404 and forward to error handler

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
+import Comment, { CommentSchema } from './comment';
 const PostSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -31,7 +32,9 @@ const PostSchema = new mongoose.Schema({
     },
     locked: {
         type: Number,
-    }
+    },
+    comments: [],
+
 });
 
 PostSchema.pre('save', function (next) {

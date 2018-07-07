@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Container, Header, Content } from 'native-base';
 import BackgroundView from '../elements/view/BackgroundView';
 import FeedFooter from '../elements/footer/FeedFooter';
@@ -7,6 +7,7 @@ import { navigate } from '../router/NavigationService';
 import { connect } from 'react-redux';
 import { getFoodData } from './actionCreator';
 import moment from 'moment';
+import ListItem from '../elements/list/ListItem';
 class FoodFeed extends Component {
     static navigationOptions = {
         header: null,
@@ -23,13 +24,26 @@ class FoodFeed extends Component {
     keyExtractor = (item, /*index*/) => {
         return item._id;
     }
+
+    listItemOnPress = (id) => {
+        // console.log('Navigate to', id);
+        navigate('TopicView', { topic_id: id });
+    }
+
     renderItem = ({ item }) => {
         return (
-            <TouchableOpacity style={{ height: 70, flex: 1 }}>
-                <Text> {item.title} </Text>
-                <Text> {item.textContent} </Text>
-                <Text> {moment(new Date(item.createdOn)).format('LLL')} </Text>
-            </TouchableOpacity>
+            <ListItem
+                id={item._id}
+                title={item.title}
+                onPress={this.listItemOnPress}
+            />
+        )
+    }
+
+    renderSeparator = () => {
+        return (
+            <View style={{ flex: 1, height: 2, backgroundColor: "#324291" }}>
+            </View>
         )
     }
 
@@ -41,11 +55,13 @@ class FoodFeed extends Component {
                         <Header transparent style={styles.header}>
                             <Text> Taaasty and we love it </Text>
                         </Header>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
+                        <View style={styles.listHolder}>
                             {!this.props.loading && <FlatList data={this.props.items}
                                 keyExtractor={this.keyExtractor}
                                 renderItem={this.renderItem}
+                                ItemSeparatorComponent={this.renderSeparator}
                             />}
+                            {this.props.loading && <ActivityIndicator size={30} color={'blue'} />}
                         </View>
                         <FeedFooter category={'Food'} onPress={this.onPress} />
                     </Content>
@@ -64,6 +80,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
     },
+    listHolder: {
+        flex: 1,
+        marginLeft: 10,
+        marginRight: 10,
+    }
 });
 mapStateToProps = (state) => {
     let { food } = state.food;
