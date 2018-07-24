@@ -30,6 +30,10 @@ const PostSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
+    mediaContentThumb: {
+        type: String,
+        trim: true,
+    },
     locked: {
         type: Number,
     },

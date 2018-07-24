@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Container, Header, Content } from 'native-base';
 import BackgroundView from '../elements/view/BackgroundView';
 import FeedFooter from '../elements/footer/FeedFooter';
 import { navigate } from '../router/NavigationService';
 import { connect } from 'react-redux';
 import { getFoodData } from './actionCreator';
-import moment from 'moment';
 import ListItem from '../elements/list/ListItem';
 class FoodFeed extends Component {
     static navigationOptions = {
@@ -26,7 +25,6 @@ class FoodFeed extends Component {
     }
 
     listItemOnPress = (id) => {
-        // console.log('Navigate to', id);
         navigate('TopicView', { topic_id: id });
     }
 
@@ -35,6 +33,7 @@ class FoodFeed extends Component {
             <ListItem
                 id={item._id}
                 title={item.title}
+                data={item}
                 onPress={this.listItemOnPress}
             />
         )

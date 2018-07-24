@@ -55,7 +55,11 @@ PostRouter.post('/savePost', checkAuth, responseHeader, (req, res, next) => {
                 let base64String = 'data:' + type + ';base64,' + b64;
                 generalUpload(base64String).then(result => {
                     console.log('Post media result', result);
-                    Post.findOneAndUpdate({ _id: post._id }, { mediaContent: result.url }, { new: true, owerWrite: false }, (error, post) => {
+                    let { url } = result;
+                    const KEY_SPLIT = 'upload/'
+                    let urlPaths = url.split(KEY_SPLIT);
+                    let thumb = urlPaths[0] + KEY_SPLIT + '/w_60,h_60/' + urlPaths[1];
+                    Post.findOneAndUpdate({ _id: post._id }, { mediaContent: result.url, mediaContentThumb: thumb }, { new: true, owerWrite: false }, (error, post) => {
                         if (error) {
                             return next(error);
                         } else {

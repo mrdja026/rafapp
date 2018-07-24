@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Container, Content, Header, Form, Item, Label, Input, Textarea, Button } from 'native-base';
 import BackgroundView from '../view/BackgroundView';
-import ImagePicker from 'react-native-image-picker';
-import { choseMedia } from '../../../../server/utls/mediaChooser';
+import { choseMedia } from '../../upload/mediaChooser';
 import { getWidth } from '../../../screenManager';
 import { myFetch } from '../../../api/utils';
 import { CREATE_POST_SERVICE } from '../../../api/api';
 import { connect } from 'react-redux';
+import { navigate } from '../../router/NavigationService';
 class TopicAdd extends Component {
     static navigationOptions = {
         header: null,
@@ -86,12 +86,16 @@ class TopicAdd extends Component {
             textContent: this.state.textContent,
             title: this.state.title,
             userId: this.props.user._id,
-            mediaContent: this.state.mediaContent,
+            mediaContent: this.state.mediaContent.uri != null ? this.state.mediaContent : null,
         }
-
         try {
             let response = await myFetch(CREATE_POST_SERVICE, { method: 'POST' }, reqData);
-            console.log('Post response lol', response);
+            if (response.ok) {
+                let { _id } = response.post;
+                navigate('TopicView', { topic_id: _id });
+            } else {
+                console.log('ERRORR', response)
+            }
         } catch (error) {
             console.error(error);
         }
