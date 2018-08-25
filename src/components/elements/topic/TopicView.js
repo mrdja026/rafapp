@@ -3,8 +3,9 @@ import { View, StyleSheet, ScrollView, ActivityIndicator, Text, Image } from 're
 import { Container, Content, Header, Input, Button } from 'native-base';
 import BackgroundView from '../view/BackgroundView';
 import { myFetch } from '../../../api/utils';
-import { GET_BY_ID_POST_SERVICE, CREATE_COMMENT_SERVICE } from '../../../api/api';
+import { GET_BY_ID_POST_SERVICE, CREATE_COMMENT_SERVICE, GET_ALL_COMMENT_SERVICE } from '../../../api/api';
 import { connect } from 'react-redux';
+import CommentBox from '../comment/CommentBox';
 class TopicView extends Component {
     static navigationOptions = {
         header: null,
@@ -16,26 +17,45 @@ class TopicView extends Component {
             console.error('Topic id must be defined');
         }
         this.state = {
-            loading: true,
+            postLoading: true,
+            commentsLoading: true,
             newComment: '',
         }
     }
 
-    componentDidMount = async () => {
+    getPostData = async () => {
         try {
             let response = await myFetch(GET_BY_ID_POST_SERVICE, { method: 'POST' }, {
                 id: this.topic_id
             });
             if (response.ok) {
-                console.log('TOpic response', response.post)
                 this.setState({
                     post: response.post,
-                    loading: false
+                    postLoading: false
                 });
             }
         } catch (error) {
             console.error('Error while getting post data');
         }
+    }
+
+    getCommentData = async () => {
+        try {
+            let response = await myFetch(GET_ALL_COMMENT_SERVICE, { method: 'POST' }, { topicId: this.topic_id });
+            if (response.ok) {
+                this.setState({
+                    comments: response.comments,
+                    commentsLoading: false,
+                });
+            }
+        } catch (error) {
+            console.error('Error while getting comment data');
+        }
+    }
+
+    componentDidMount = async () => {
+        await this.getPostData();
+        this.getCommentData();
     }
 
     setNewComment = (text) => {
@@ -53,7 +73,10 @@ class TopicView extends Component {
                     userId: this.props.user._id,
                     content: this.state.newComment,
                 });
-            console.log('REsponse comment', commentResponse);
+            if (commentResponse.ok) {
+                this.setState({ newComment: null, commentsLoading: true });
+                this.getCommentData();
+            }
         } catch (error) {
             console.log('Comment error', error);
         }
@@ -65,12 +88,12 @@ class TopicView extends Component {
             <Container>
                 <BackgroundView>
                     <Header transparent>
-                        {!this.state.loading && <Text> {this.state.post.title} </Text>}
+                        {!this.state.postLoading && <Text> {this.state.post.title} </Text>}
                     </Header>
                     <Content contentContainerStyle={styles.content}>
-                        {this.state.loading && <ActivityIndicator size={30} color={'blue'} />}
-                        {!this.state.loading &&
-                            <ScrollView contentContainerStyle={{
+                        {this.state.postLoading && <ActivityIndicator size={30} color={'blue'} />}
+                        {!this.state.postLoading &&
+                            <View style={{
                                 flex: 1,
                                 flexDirection: 'column',
                                 paddingLeft: 5,
@@ -84,23 +107,18 @@ class TopicView extends Component {
                                 </View>}
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                     <Text> {this.state.post.textContent} </Text>
-                                    <Text> {this.state.post.createdOn} </Text>
+                                    <Text> {new Date(this.state.post.createdOn).toISOString()} </Text>
                                 </View>
                                 <View style={{ borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Input value={this.state.newComment} onChangeText={this.setNewComment} />
+                                    <Input placeholder={'Enter quick replay'} value={this.state.newComment} onChangeText={this.setNewComment} />
                                     <Button onPress={this.sendComment}>
                                         <Text> Post </Text>
                                     </Button>
                                 </View>
-                                <View style={{ borderWidth: 1 }}>
-                                    <Text> COmments </Text>
-                                    {this.state.post.comments && this.state.post.comments.map(item => {
-                                        return (
-                                            <Text> {item.content} </Text>
-                                        )
-                                    })}
-                                </View>
-                            </ScrollView>
+                                <CommentBox commentExpand={null}
+                                    loading={this.state.commentsLoading}
+                                    comments={this.state.comments} />
+                            </View>
                         }
                     </Content>
                 </BackgroundView>
@@ -113,7 +131,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-    }
+    },
 });
 mapStateToProps = (state) => {
     let { auth } = state.auth;

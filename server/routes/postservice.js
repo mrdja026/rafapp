@@ -30,14 +30,7 @@ PostRouter.post('/getById', checkAuth, responseHeader, (req, res, next) => {
             error.status = HTTP_RA_EXCEPTION;
             return next(error);
         } else {
-            Comment.find({ topicId: post._id }, null, { sort: SORT_CONDITION }, (error, comments) => {
-                if (error) {
-                    return next(error);
-                } else {
-                    post.comments = [...comments];
-                    return res.send({ ok: true, post: post });
-                }
-            })
+            return res.send({ ok: true, post: post });
         }
     });
 });
