@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator, Text, Image } from 'react-native';
-import { Container, Content, Header, Input, Button } from 'native-base';
+import { Container, Content, Header, Input, Button, Label } from 'native-base';
 import BackgroundView from '../view/BackgroundView';
 import { myFetch } from '../../../api/utils';
 import { GET_BY_ID_POST_SERVICE, CREATE_COMMENT_SERVICE, GET_ALL_COMMENT_SERVICE } from '../../../api/api';
 import { connect } from 'react-redux';
 import CommentBox from '../comment/CommentBox';
+import QuickReply from '../comment/QuickReply';
 class TopicView extends Component {
     static navigationOptions = {
         header: null,
@@ -87,8 +88,8 @@ class TopicView extends Component {
         return (
             <Container>
                 <BackgroundView>
-                    <Header transparent>
-                        {!this.state.postLoading && <Text> {this.state.post.title} </Text>}
+                    <Header transparent style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        {!this.state.postLoading && <Text style={{ fontSize: 50, fontWeight: 'bold' }}> {this.state.post.title} </Text>}
                     </Header>
                     <Content contentContainerStyle={styles.content}>
                         {this.state.postLoading && <ActivityIndicator size={30} color={'blue'} />}
@@ -106,15 +107,10 @@ class TopicView extends Component {
                                     />
                                 </View>}
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text> {this.state.post.textContent} </Text>
-                                    <Text> {new Date(this.state.post.createdOn).toISOString()} </Text>
+                                    <Label> {this.state.post.textContent} </Label>
+                                    <Label> {new Date(this.state.post.createdOn).toISOString()} </Label>
                                 </View>
-                                <View style={{ borderWidth: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Input placeholder={'Enter quick replay'} value={this.state.newComment} onChangeText={this.setNewComment} />
-                                    <Button onPress={this.sendComment}>
-                                        <Text> Post </Text>
-                                    </Button>
-                                </View>
+                                <QuickReply sendComment={this.sendComment} newComment={this.state.newComment} setNewComment={this.setNewComment} />
                                 <CommentBox commentExpand={null}
                                     loading={this.state.commentsLoading}
                                     comments={this.state.comments} />
@@ -126,6 +122,8 @@ class TopicView extends Component {
         );
     }
 }
+
+
 const styles = StyleSheet.create({
     content: {
         flex: 1,

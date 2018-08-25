@@ -43,6 +43,7 @@ PostRouter.post('/savePost', checkAuth, responseHeader, (req, res, next) => {
             console.log('Errorr', error);
             return next(error);
         } else {
+            //TODO: ima neki bug kada se png uploaduje ? maybe
             if (mediaContent) {
                 let { b64, type } = mediaContent;
                 let base64String = 'data:' + type + ';base64,' + b64;

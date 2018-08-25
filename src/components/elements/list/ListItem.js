@@ -8,8 +8,6 @@ const ListItem = (props) => {
     return (
         <View style={{ flex: 1 }}>
             <TouchableOpacity onPress={onPress} style={{ flex: 1, flexDirection: 'row', height: 70, justifyContent: 'flex-start', alignItems: 'center' }}>
-                {!props.data.mediaContent && <View style={{ width: 60, height: 60, marginRight: 10, backgroundColor: 'red' }}>
-                </View>}
                 {props.data.mediaContent && <Image style={{ width: 60, height: 60 }} source={{ uri: props.data.mediaContentThumb }} />}
                 <Text numberOfLines={5} style={{ fontSize: 25, color: '#324291' }}> {props.title} </Text>
             </TouchableOpacity>
