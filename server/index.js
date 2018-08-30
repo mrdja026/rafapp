@@ -4,10 +4,10 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 var MongoStore = require('connect-mongo')(session);
 import auth from './routes/auth';
+import post from './routes/postservice';
 import user from './routes/userservice';
 import cloudinary from 'cloudinary';
 import assets from './routes/assets';
-import post from './routes/postservice';
 import comment from './routes/commentservice';
 cloudinary.config({
     cloud_name: 'ditc89gcc',
@@ -40,9 +40,9 @@ App.use(session({
 
 App.use(bodyParser.urlencoded({ extended: false }));
 App.use('/', auth);
+App.use('/post', post);
 App.use('/', user);
 App.use('/', assets)
-App.use('/post', post);
 App.use('/comment', comment);
 
 

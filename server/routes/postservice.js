@@ -22,17 +22,21 @@ PostRouter.post('/getAll', checkAuth, responseHeader, (req, res, next) => {
 
 PostRouter.post('/getById', checkAuth, responseHeader, (req, res, next) => {
     let { id } = req.body;
-    Post.findById(id, (error, post) => {
-        if (error) {
-            return nex(error);
-        } else if (!post) {
-            let error = new Error('Post not found');
-            error.status = HTTP_RA_EXCEPTION;
-            return next(error);
-        } else {
-            return res.send({ ok: true, post: post });
-        }
-    });
+    // Post.findById(id, (error, post) => {
+    //     if (error) {
+    //         return nex(error);
+    //     } else if (!post) {
+    //         let error = new Error('Post not found');
+    //         error.status = HTTP_RA_EXCEPTION;
+    //         return next(error);
+    //     } else {
+    //         return res.send({ ok: true, post: post });
+    //     }
+    // });
+    Post.findOne({_id:id}).populate('userId').exec((err,result)=>{
+        console.log('REZULTATTATAT', result);
+        return res.send({ ok: true, post: result });
+    })
 });
 
 PostRouter.post('/savePost', checkAuth, responseHeader, (req, res, next) => {
