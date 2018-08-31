@@ -10,31 +10,21 @@ const PostRouter = express.Router();
 
 PostRouter.post('/getAll', checkAuth, responseHeader, (req, res, next) => {
     let { skip, take, category } = req.body;
-    Post.find({ category: category }, null, { sort: SORT_CONDITION, skip: skip, limit: take }, (error, posts) => {
-        if (error) {
+    Post.find({ category: category }, null, { sort: SORT_CONDITION, skip: skip, limit: take }).populate('userId').exec((err, result) => {
+        if (err) {
             return next(error);
         } else {
-            console.log('Posts to return', posts);
-            return res.send({ ok: true, items: posts });
+            return res.send({ ok: true, items: result });
         }
-    })
+    });
 });
 
 PostRouter.post('/getById', checkAuth, responseHeader, (req, res, next) => {
     let { id } = req.body;
-    // Post.findById(id, (error, post) => {
-    //     if (error) {
-    //         return nex(error);
-    //     } else if (!post) {
-    //         let error = new Error('Post not found');
-    //         error.status = HTTP_RA_EXCEPTION;
-    //         return next(error);
-    //     } else {
-    //         return res.send({ ok: true, post: post });
-    //     }
-    // });
-    Post.findOne({_id:id}).populate('userId').exec((err,result)=>{
-        console.log('REZULTATTATAT', result);
+    Post.findOne({ _id: id }).populate('userId').exec((err, result) => {
+        if (err) {
+            return next(err);
+        }
         return res.send({ ok: true, post: result });
     })
 });

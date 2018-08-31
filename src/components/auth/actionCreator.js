@@ -60,10 +60,12 @@ export const checkUserCredentials = () => {
             if (!_user) {
                 dispatch({ type: LOGOUT });
             } else {
-                let { id } = user;
+                let { _id } = _user;
+                console.log(_id);
                 try {
-                    let userDetails = await myFetch(GET_USER_SERVICE, { method: 'POST' }, { id: id });
+                    let userDetails = await myFetch(GET_USER_SERVICE, { method: 'POST' }, { id: _id });
                     if (userDetails.ok) {
+                        console.log('get user data response', userDetails);
                         let { user } = userDetails;
                         authManager.setUser(user);
                         dispatch({ type: LOGIN });

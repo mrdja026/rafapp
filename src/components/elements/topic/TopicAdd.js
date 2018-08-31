@@ -8,6 +8,7 @@ import { myFetch } from '../../../api/utils';
 import { CREATE_POST_SERVICE } from '../../../api/api';
 import { connect } from 'react-redux';
 import { navigate } from '../../router/NavigationService';
+import TopicMediaChooser from './TopicMediaChooser';
 class TopicAdd extends Component {
     static navigationOptions = {
         header: null,
@@ -15,8 +16,8 @@ class TopicAdd extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: 'Test title',
-            textContent: 'Test content',
+            title: '',
+            textContent: '',
             mediaContent: { uri: null },
 
         }
@@ -31,52 +32,6 @@ class TopicAdd extends Component {
     onTextContentChange = (text) => {
         this.setState({ textContent: text });
     }
-    mediaUpload = async () => {
-        console.log('Media upload presss');
-        let options = {
-            title: 'Select picture',
-            storageOptions: {
-                skipBackup: true,
-                path: 'images'
-            }
-        };
-        try {
-            let response = await choseMedia(options);
-            if (response.ok && response.userCanceled) {
-                this.setState({
-                    mediaContent: {
-                        uri: null,
-                    }
-                });
-            }
-            if (response.ok && !response.userCanceled) {
-                console.log('responsedata', response.responseData)
-                this.setState({
-                    mediaContent: {
-                        uri: response.responseData.uri,
-                        b64: response.responseData.data,
-                        type: response.responseData.type,
-                    },
-                });
-            }
-        } catch (error) {
-            console.log('error media', error);
-        }
-    }
-
-    getButtonStyle = () => {
-        if (!this.state.mediaContent.uri) {
-            return {};
-        } else {
-            return {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                height: '100%'
-            }
-        }
-    }
-
     savePost = async () => {
         if (this.state.title.length == 0) {
             console.error('MUst titlt lol');
@@ -100,6 +55,17 @@ class TopicAdd extends Component {
             console.error(error);
         }
     }
+
+    mediaChooseOk = (data) => {
+        this.setState({
+            mediaContent: data,
+        });
+    }
+
+    mediaChooseFail = (data) => {
+        console.log('Fail stuff', data);
+    }
+
     render() {
         return (
             <Container>
@@ -111,20 +77,16 @@ class TopicAdd extends Component {
                         <Form>
                             <Item floatingLabel>
                                 <Label> Title </Label>
-                                <Input value={this.state.title} onChangeText={this.onTitleChange} />
+                                <Input placeholder={'Post title...'} value={this.state.title} onChangeText={this.onTitleChange} />
                             </Item>
                             <Item floatingLabel>
                                 <Label> Content (optional) </Label>
-                                <Input value={this.state.textContent} onChangeText={this.onTextContentChange} />
+                                <Input placeholder={'Post content...'} value={this.state.textContent} onChangeText={this.onTextContentChange} />
                             </Item>
-                            <View style={styles.mediaHolder}>
-                                {this.state.mediaContent.uri && <Image source={this.state.mediaContent} style={{ width: getWidth(), height: 300, margin: 10 }} resizeMode={'contain'} />}
-                                <TouchableOpacity style={[styles.mediaButtonHolder, this.getButtonStyle()]} onPress={this.mediaUpload}>
-                                    {this.state.mediaContent.uri && <Text style={styles.mediaButtonText}>  {'Click again and cancel to remove'} </Text>}
-                                    {!this.state.mediaContent.uri && <Text style={styles.mediaButtonText}>  {'Press here to uplaod'} </Text>}
-                                </TouchableOpacity>
-
-                            </View>
+                            <TopicMediaChooser
+                                canDelete={false}
+                                failCallback={this.mediaChooseFail}
+                                successCallback={this.mediaChooseOk} />
                         </Form>
                         <Button primary onPress={this.savePost}>
                             <Text> Save </Text>

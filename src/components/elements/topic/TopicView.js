@@ -7,6 +7,9 @@ import { GET_BY_ID_POST_SERVICE, CREATE_COMMENT_SERVICE, GET_ALL_COMMENT_SERVICE
 import { connect } from 'react-redux';
 import CommentBox from '../comment/CommentBox';
 import QuickReply from '../comment/QuickReply';
+import APPSTYLE from '../../../styles/style';
+import { dateFormat } from '../../../const';
+import TopicMediaChooser from './TopicMediaChooser';
 class TopicView extends Component {
     static navigationOptions = {
         header: null,
@@ -89,7 +92,7 @@ class TopicView extends Component {
             <Container>
                 <BackgroundView>
                     <Header transparent style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        {!this.state.postLoading && <Text style={{ fontSize: 50, fontWeight: 'bold' }}> {this.state.post.title} </Text>}
+                        {!this.state.postLoading && <Text style={APPSTYLE.headingText}> {this.state.post.title} </Text>}
                     </Header>
                     <Content contentContainerStyle={styles.content}>
                         {this.state.postLoading && <ActivityIndicator size={30} color={'blue'} />}
@@ -101,14 +104,15 @@ class TopicView extends Component {
                                 paddingRight: 5,
                             }}>
                                 {this.state.post.mediaContent && <View>
-                                    <Image resizeMode={'contain'}
-                                        style={{ height: 200, width: '100%' }}
-                                        source={{ uri: this.state.post.mediaContent }}
-                                    />
+                                    <TopicMediaChooser
+                                        successCallback={() => { }}
+                                        failCallback={() => { }}
+                                        loadedContent={this.state.post.mediaContent}
+                                        canDelete={this.props.user._id == this.state.post.userId._id} />
                                 </View>}
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                     <Label> {this.state.post.textContent} </Label>
-                                    <Label> {new Date(this.state.post.createdOn).toISOString()} </Label>
+                                    <Label> {dateFormat(this.state.post.createdOn)} </Label>
                                 </View>
                                 <QuickReply sendComment={this.sendComment} newComment={this.state.newComment} setNewComment={this.setNewComment} />
                                 <CommentBox commentExpand={null}
@@ -133,6 +137,7 @@ const styles = StyleSheet.create({
 });
 mapStateToProps = (state) => {
     let { auth } = state.auth;
+    console.log('Topic view auth bla', auth);
     return {
         ...auth,
     }

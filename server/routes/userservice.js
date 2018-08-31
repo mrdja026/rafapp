@@ -15,9 +15,9 @@ UserService.post('/updateUser', checkAuth, responseHeader, (req, res, next) => {
 });
 
 UserService.post('/getUserData', checkAuth, responseHeader, (req, res, next) => {
-    let id = req.body.id;
+    let {id} = req.body;
     let _res = res;
-    User.findOne(id)
+    User.findById(id)
         .exec((error, user) => {
             console.log('userdetails', error, user);
             if (error) {
