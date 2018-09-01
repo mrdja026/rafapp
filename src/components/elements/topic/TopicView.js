@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ScrollView, ActivityIndicator, Text, Image } from 'react-native';
-import { Container, Content, Header, Input, Button, Label } from 'native-base';
+import { View, StyleSheet, ScrollView, ActivityIndicator, Text, Image, TouchableOpacity } from 'react-native';
+import { Container, Content, Header, Input, Button, Label, Footer } from 'native-base';
 import BackgroundView from '../view/BackgroundView';
 import { myFetch } from '../../../api/utils';
 import { GET_BY_ID_POST_SERVICE, CREATE_COMMENT_SERVICE, GET_ALL_COMMENT_SERVICE } from '../../../api/api';
@@ -10,6 +10,7 @@ import QuickReply from '../comment/QuickReply';
 import APPSTYLE from '../../../styles/style';
 import { dateFormat } from '../../../const';
 import TopicMediaChooser from './TopicMediaChooser';
+import { navigate } from '../../router/NavigationService';
 class TopicView extends Component {
     static navigationOptions = {
         header: null,
@@ -95,34 +96,45 @@ class TopicView extends Component {
                         {!this.state.postLoading && <Text style={APPSTYLE.headingText}> {this.state.post.title} </Text>}
                     </Header>
                     <Content contentContainerStyle={styles.content}>
-                        {this.state.postLoading && <ActivityIndicator size={30} color={'blue'} />}
-                        {!this.state.postLoading &&
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                paddingLeft: 5,
-                                paddingRight: 5,
-                            }}>
-                                {this.state.post.mediaContent && <View>
-                                    <TopicMediaChooser
-                                        successCallback={() => { }}
-                                        failCallback={() => { }}
-                                        loadedContent={this.state.post.mediaContent}
-                                        canDelete={this.props.user._id == this.state.post.userId._id} />
-                                </View>}
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                    <Label> {this.state.post.textContent} </Label>
-                                    <Label> {dateFormat(this.state.post.createdOn)} </Label>
+                        <ScrollView>
+                            {this.state.postLoading && <ActivityIndicator size={30} color={'blue'} />}
+                            {!this.state.postLoading &&
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    paddingLeft: 5,
+                                    paddingRight: 5,
+                                }}>
+                                    {this.state.post.mediaContent && <View>
+                                        <TopicMediaChooser
+                                            successCallback={() => { }}
+                                            failCallback={() => { }}
+                                            loadedContent={this.state.post.mediaContent}
+                                            canDelete={this.props.user._id == this.state.post.userId._id} />
+                                    </View>}
+                                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                        <Label> {this.state.post.textContent} </Label>
+                                        <Label> {dateFormat(this.state.post.createdOn)} </Label>
+                                    </View>
+                                    <CommentBox commentExpand={null}
+                                        loading={this.state.commentsLoading}
+                                        comments={this.state.comments} />
                                 </View>
-                                <QuickReply sendComment={this.sendComment} newComment={this.state.newComment} setNewComment={this.setNewComment} />
-                                <CommentBox commentExpand={null}
-                                    loading={this.state.commentsLoading}
-                                    comments={this.state.comments} />
-                            </View>
-                        }
+                            }
+                        </ScrollView>
+                        <Footer>
+                            <TouchableOpacity style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                            }} onPress={() => { navigate('Modal') }}>
+                                <Text style={[APPSTYLE.bigText, { color: 'white' }]}> Mrdjan</Text>
+                            </TouchableOpacity>
+                        </Footer>
                     </Content>
                 </BackgroundView>
-            </Container>
+            </Container >
         );
     }
 }

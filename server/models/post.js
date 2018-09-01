@@ -18,7 +18,8 @@ const PostSchema = new mongoose.Schema({
         enum: POST_TYPES,
     },
     score: {
-        type: Number
+        type: Number,
+        default: 0,
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId, ref: "User",

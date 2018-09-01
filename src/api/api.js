@@ -11,3 +11,4 @@ export const GET_BY_ID_POST_SERVICE = 'http://10.0.2.2:3000/post/getById';
 
 export const CREATE_COMMENT_SERVICE = 'http://10.0.2.2:3000/comment/addNew';
 export const GET_ALL_COMMENT_SERVICE = 'http://10.0.2.2:3000/comment/getAll';
+export const VOTE_POST_SERVICE = 'http://10.0.2.2:3000/post/vote';

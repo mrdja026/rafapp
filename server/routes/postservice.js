@@ -64,6 +64,31 @@ PostRouter.post('/savePost', checkAuth, responseHeader, (req, res, next) => {
         }
     });
 });
+const UP_VOTE = '+';
+const DOWN_VOTE = '-'
+PostRouter.post('/vote', checkAuth, responseHeader, (req, res, next) => {
+    //TODO: Voting sistem da dozvoli useru da da samo + - 0, tj da se napravi kolekcija userPostVote, i tu gleda sta sme da radi itd itd;
+    let { type, id } = req.body;
+    if (type != UP_VOTE && type != DOWN_VOTE)
+        return next(new Error('Wrong voting type provided'));
+    Post.findById(id, (error, result) => {
+        if (error) {
+            return next(error);
+        } else {
+            let newScore = null;
+            let { score } = result;
+            newScore = type == UP_VOTE ? score + 1 : score - 1;
+            result.score = newScore;
+            result.save((error, update) => {
+                if (error) {
+                    return next(error);
+                } else {
+                    return res.send({ ok: true, result: update });
+                }
+            });
+        }
+    })
+});
 
 
 

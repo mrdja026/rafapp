@@ -4663,9 +4663,9 @@ react-native-easy-grid@0.1.17:
   dependencies:
     lodash "^4.11.1"
 
-react-native-firebase@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.2.0.tgz#d44b1e5b5149d65936045c0398e0acc2ebb4c7e9"
+react-native-firebase@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-firebase/-/react-native-firebase-4.1.0.tgz#ad18bd4f90020e79de9bca3bf5b179b3a49d6103"
   dependencies:
     opencollective "^1.0.3"
     postinstall-build "^5.0.1"
@@ -4685,6 +4685,20 @@ react-native-keyboard-aware-scroll-view@0.5.0:
   dependencies:
     prop-types "^15.6.0"
     react-native-iphone-x-helper "^1.0.1"
+
+react-native-root-siblings@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-3.1.0.tgz#194067d37d4d2c824d923148e53922ee6ac2e06f"
+  dependencies:
+    react-redux "*"
+    static-container "^1.0.0"
+
+react-native-root-toast@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-root-toast/-/react-native-root-toast-3.0.1.tgz#ad0a37c46bc72971a229c7784df25147004e5538"
+  dependencies:
+    prop-types "^15.5.10"
+    react-native-root-siblings "^3.0.0"
 
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"
@@ -4832,7 +4846,7 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
-react-redux@^5.0.7:
+react-redux@*, react-redux@^5.0.7:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.7.tgz#0dc1076d9afb4670f993ffaef44b8f8c1155a4c8"
   dependencies:
@@ -5466,6 +5480,10 @@ stack-utils@^1.0.1:
 stacktrace-parser@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/stacktrace-parser/-/stacktrace-parser-0.1.4.tgz#01397922e5f62ecf30845522c95c4fe1d25e7d4e"
+
+static-container@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/static-container/-/static-container-1.2.0.tgz#1c6e92b869da47d32abe47f45f50bf39661d9c2f"
 
 static-extend@^0.1.1:
   version "0.1.2"

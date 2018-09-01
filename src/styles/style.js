@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-const DEFAULT_FONT_COLOR = '#324291';
+export const DEFAULT_FONT_COLOR = '#324291';
 
 const _bigText = {
     fontSize: 25,

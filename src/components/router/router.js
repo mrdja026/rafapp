@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { BackHandler } from 'react-native';
-import { StackNavigator, DrawerNavigator, NavigationActions } from 'react-navigation';
+import { BackHandler, View, Text, Button } from 'react-native';
+import { NavigationActions, createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Login from '../auth/Login';
 import Register from '../auth/Register';
 import Home from '../home/Home';
@@ -11,10 +11,8 @@ import FoodFeed from '../food/FoodFeed';
 import LifeStyleFeed from '../lifestyle/LifestyleFeed';
 import TopicAdd from '../elements/topic/TopicAdd';
 import TopicView from '../elements/topic/TopicView';
-
-
-const AppNavigation = DrawerNavigator({
-    App: StackNavigator({
+const AppNavigation = createDrawerNavigator({
+    screen: createStackNavigator({
         Home: {
             screen: Home,
         },
@@ -41,19 +39,34 @@ const AppNavigation = DrawerNavigator({
 AppNavigation.navigationOptions = {
     header: null,
 }
-const RootStack = StackNavigator({
-    Login: {
+class ModalScreen extends Component {
+    render() {
+        return (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ fontSize: 30 }}>This is a modal!</Text>
+                <Button
+                    onPress={() => this.props.navigation.goBack()}
+                    title="Dismiss"
+                />
+            </View>
+        );
+    }
+}
+
+const AppWithModalNavigation = createStackNavigator({
+    Main: AppNavigation,
+    Modal: ModalScreen,
+})
+
+const RootStack = createSwitchNavigator({
+    Auth: {
         screen: Login,
     },
-    Register: {
-        screen: Register
-    },
     App: {
-        screen: AppNavigation
+        screen: AppWithModalNavigation
     }
 }, {
-
-        initialRouteName: 'Login',
+        initialRouteName: 'Auth',
     });
 
 RootStack.navigationOptions = {
@@ -64,27 +77,28 @@ export default class AppNavigator extends Component {
         super(props);
 
     }
-    componentDidMount() {
-        BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
-    }
+    //TODO:Remove this 
+    // componentDidMount() {
+    //     BackHandler.addEventListener("hardwareBackPress", this.onBackPress);
+    // }
 
-    componentWillUnmount() {
-        BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
-    }
+    // componentWillUnmount() {
+    //     BackHandler.removeEventListener("hardwareBackPress", this.onBackPress);
+    // }
 
-    onBackPress = () => {
-        console.log('Back action');
-        let navigation = getNavigator();
-        let { nav } = navigation.state;
-        let { dispatch } = navigation;
-        if (nav.index === 0) {
-            //Login check? must not allow this.
-            return true;
-        }
-        //Handle exit app if screen is home;
-        dispatch(NavigationActions.back());
-        return true;
-    };
+    // onBackPress = () => {
+    //     console.log('Back action');
+    //     let navigation = getNavigator();
+    //     let { nav } = navigation.state;
+    //     let { dispatch } = navigation;
+    //     if (nav.index === 0) {
+    //         //Login check? must not allow this.
+    //         return true;
+    //     }
+    //     //Handle exit app if screen is home;
+    //     dispatch(NavigationActions.back());
+    //     return true;
+    // };
 
     render() {
         return (
@@ -94,3 +108,4 @@ export default class AppNavigator extends Component {
         )
     }
 }
+
