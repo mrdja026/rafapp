@@ -7,6 +7,7 @@ import { navigate } from '../router/NavigationService';
 import { connect } from 'react-redux';
 import { getFoodData } from './actionCreator';
 import ListItem from '../elements/list/ListItem';
+import FirebaseManager from '../../firebase';
 class FoodFeed extends Component {
     static navigationOptions = {
         header: null,

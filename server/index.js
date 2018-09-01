@@ -6,17 +6,15 @@ var MongoStore = require('connect-mongo')(session);
 import auth from './routes/auth';
 import post from './routes/postservice';
 import user from './routes/userservice';
+import subscription from './routes/subscriptionservice';
 import cloudinary from 'cloudinary';
 import assets from './routes/assets';
 import comment from './routes/commentservice';
-cloudinary.config({
-    cloud_name: 'ditc89gcc',
-    api_key: '132562888723164',
-    api_secret: 'ATnok_qA0gPP3TwqE8xefuY7dQo'
-});
+import { CLOUDINARY_INFO, SOME_API_SECRET } from './const';
+cloudinary.config(CLOUDINARY_INFO);
 
 const PORT = 3000;
-const SECRET = '2DCoNci2jmVRLFeXRNfaozev3AfLpxDjh0sfMXGY4K4SNlIuE5KATVPrryllAfH0KVVzSVrJMsaPLv4QcgI7wwIBhWCZtGaMrWTX';
+const SECRET = SOME_API_SECRET;
 
 const App = express();
 App.use(bodyParser.json());
@@ -44,6 +42,7 @@ App.use('/post', post);
 App.use('/', user);
 App.use('/', assets)
 App.use('/comment', comment);
+App.use('/sub', subscription);
 
 
 // catch 404 and forward to error handler

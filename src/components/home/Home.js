@@ -4,6 +4,7 @@ import { Container, Header, Content, Button, Text, Input, Item } from 'native-ba
 import { connect } from 'react-redux';
 import BackgroundView from '../elements/view/BackgroundView';
 import { navigate } from '../router/NavigationService';
+import FirebaseManager from '../../firebase';
 class Home extends Component {
     static navigationOptions = {
         header: null,
@@ -14,10 +15,12 @@ class Home extends Component {
             message: ''
         }
     }
-    onPress = () => {
+    async componentDidMount() {
+        FirebaseManager.init();
+        //await FirebaseManager.getInitialNotification();
     }
-    onChangeMessage = (text) => {
-        this.setState({ message: text });
+    componentWillUnmount() {
+        FirebaseManager.destroy();
     }
     render() {
         return (

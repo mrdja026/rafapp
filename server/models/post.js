@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import Comment, { CommentSchema } from './comment';
 import User from './user';
+import { POST_TYPES } from '../const';
 const PostSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -14,7 +15,7 @@ const PostSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['Food', 'Lifestyle', 'Tech']
+        enum: POST_TYPES,
     },
     score: {
         type: Number
