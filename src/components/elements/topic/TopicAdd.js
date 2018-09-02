@@ -77,13 +77,14 @@ class TopicAdd extends Component {
                         <Form>
                             <Item floatingLabel>
                                 <Label> Title </Label>
-                                <Input placeholder={'Post title...'} value={this.state.title} onChangeText={this.onTitleChange} />
+                                <Input value={this.state.title} onChangeText={this.onTitleChange} />
                             </Item>
                             <Item floatingLabel>
                                 <Label> Content (optional) </Label>
-                                <Input placeholder={'Post content...'} value={this.state.textContent} onChangeText={this.onTextContentChange} />
+                                <Input value={this.state.textContent} onChangeText={this.onTextContentChange} />
                             </Item>
                             <TopicMediaChooser
+                                newPost={true}
                                 canDelete={false}
                                 failCallback={this.mediaChooseFail}
                                 successCallback={this.mediaChooseOk} />

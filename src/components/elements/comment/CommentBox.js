@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import APPSTYLE, { BORDER_COLOR } from '../../../styles/style';
+import { dateFormat } from '../../../const';
 class CommentBox extends Component {
     constructor(props) {
         super(props);
@@ -7,7 +9,7 @@ class CommentBox extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <Text> Comments </Text>
+                <Text style={APPSTYLE.normalText}> Comments </Text>
                 <View style={styles.container}>
                     {!this.props.loading && this.props.comments.map(item => {
                         return (
@@ -28,24 +30,40 @@ const SingleComment = (props) => {
     return (
         <View style={styles.singleComment}>
             <TouchableOpacity onPress={this.onPress}>
-                <Text> {props.item.content} </Text>
+                <Text style={APPSTYLE.normalText}>{props.item.content} </Text>
             </TouchableOpacity>
+            <View style={styles.commentInfo}>
+                <View style={{ flexDirection: 'column' }}>
+                    <Text style={APPSTYLE.smallText}>@{props.item.userId.username}</Text>
+                    <Text style={APPSTYLE.smallText}>{dateFormat(props.item.createdOn)}</Text>
+                </View>
+                <TouchableOpacity onPress={() => { }}>
+                    <Text style={APPSTYLE.smallText}>Reply</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 5,
+        borderTopWidth: 1,
+        borderTopColor: BORDER_COLOR,
+        marginTop: 10,
         justifyContent: 'center',
         alignItems: 'flex-start',
     },
     singleComment: {
-        margin: 5,
+        marginBottom: 10,
         width: '100%',
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
         borderLeftWidth: 1,
+    },
+    commentInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
+
 });
 export default CommentBox;

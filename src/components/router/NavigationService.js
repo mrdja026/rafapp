@@ -20,6 +20,8 @@ export const getNavigator = () => {
 }
 
 export const goBack = () => {
-    console.log(_navigator);
+    _navigator.dispatch(
+        NavigationActions.back()
+    );
 }
 

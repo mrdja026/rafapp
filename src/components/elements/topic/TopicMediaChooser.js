@@ -8,7 +8,8 @@ class TopicMediaChooser extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mediaContent: this.props.loadedContent ? { uri: this.props.loadedContent } : { uri: null }
+            mediaContent: this.props.loadedContent ? { uri: this.props.loadedContent } : { uri: null },
+
         }
     }
     open = async () => {
@@ -55,15 +56,22 @@ class TopicMediaChooser extends Component {
             }
         }
     }
+
+    getPictureHeight = () => {
+        let width = getWidth();
+        let height = (9 / 16 * width);
+        return height;
+
+    }
     render() {
         return (
             <View style={styles.mediaHolder}>
                 {
                     this.state.mediaContent.uri && <Image source={this.state.mediaContent}
-                        style={{ width: getWidth(), height: 300, margin: 10 }} resizeMode={'contain'} />
+                        style={{ width: getWidth(), height: this.getPictureHeight() }} resizeMode={'contain'} />
                 }
                 {
-                    this.props.canDelete && <TouchableOpacity style={[styles.mediaButtonHolder, this.getButtonStyle()]} onPress={this.open}>
+                    (this.props.canDelete || this.props.newPost) && <TouchableOpacity style={[styles.mediaButtonHolder, this.getButtonStyle()]} onPress={this.open}>
                         {this.state.mediaContent.uri && <Text style={styles.mediaButtonText}>  {'Click again and cancel to remove'} </Text>}
                         {!this.state.mediaContent.uri && <Text style={styles.mediaButtonText}>  {'Press here to uplaod'} </Text>}
                     </TouchableOpacity>
@@ -75,7 +83,6 @@ class TopicMediaChooser extends Component {
 
 const styles = StyleSheet.create({
     mediaHolder: {
-        marginTop: 20,
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 1,
@@ -98,7 +105,6 @@ const styles = StyleSheet.create({
 TopicMediaChooser.propTypes = {
     successCallback: PropTypes.func.isRequired,
     failCallback: PropTypes.func.isRequired,
-    canDelete: PropTypes.bool.isRequired,
 }
 
 export default TopicMediaChooser;

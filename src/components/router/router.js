@@ -11,6 +11,7 @@ import FoodFeed from '../food/FoodFeed';
 import LifeStyleFeed from '../lifestyle/LifestyleFeed';
 import TopicAdd from '../elements/topic/TopicAdd';
 import TopicView from '../elements/topic/TopicView';
+import ModalScreen from '../elements/modal/Modal';
 const AppNavigation = createDrawerNavigator({
     screen: createStackNavigator({
         Home: {
@@ -33,24 +34,12 @@ const AppNavigation = createDrawerNavigator({
         },
         TopicView: {
             screen: TopicView,
-        }
+        },
+       
     })
 })
 AppNavigation.navigationOptions = {
     header: null,
-}
-class ModalScreen extends Component {
-    render() {
-        return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 30 }}>This is a modal!</Text>
-                <Button
-                    onPress={() => this.props.navigation.goBack()}
-                    title="Dismiss"
-                />
-            </View>
-        );
-    }
 }
 
 const AppWithModalNavigation = createStackNavigator({
@@ -59,9 +48,16 @@ const AppWithModalNavigation = createStackNavigator({
 })
 
 const RootStack = createSwitchNavigator({
-    Auth: {
-        screen: Login,
-    },
+    Auth: createStackNavigator({
+        Login: {
+            screen: Login
+        },
+        Register: {
+            screen: Register,
+        }
+    }, {
+            initialRouteName: 'Login'
+        }),
     App: {
         screen: AppWithModalNavigation
     }
