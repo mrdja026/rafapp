@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
-import { Container, Header, Content } from 'native-base';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Container, Header, Content, Icon } from 'native-base';
 import BackgroundView from '../elements/view/BackgroundView';
 import FeedFooter from '../elements/footer/FeedFooter';
 import { navigate } from '../router/NavigationService';
@@ -8,12 +8,25 @@ import { connect } from 'react-redux';
 import { getFoodData } from './actionCreator';
 import ListItem from '../elements/list/ListItem';
 import FirebaseManager from '../../firebase';
+import APPSTYLE from '../../styles/style';
+import TopicAdd from '../elements/topic/TopicAdd';
 class FoodFeed extends Component {
     static navigationOptions = {
         header: null,
     }
     onPress = () => {
-        navigate('NewTopic', { category: 'Food' })
+        let renderF = () => {
+            return (
+                <TopicAdd
+                    navigation={this.props.navigation}
+                    category={'Food'} />
+            )
+        }
+        this.props.navigation.navigate('Modal', {
+            renderFunction: () => {
+                return renderF();
+            }
+        });
     }
     componentDidMount() {
         if (this.props.items.length <= 0) {
@@ -27,6 +40,7 @@ class FoodFeed extends Component {
 
     listItemOnPress = (id) => {
         navigate('TopicView', { topic_id: id });
+
     }
 
     renderItem = ({ item }) => {
@@ -46,14 +60,18 @@ class FoodFeed extends Component {
             </View>
         )
     }
-
     render() {
         return (
             <Container>
                 <BackgroundView>
                     <Content contentContainerStyle={styles.content}>
                         <Header transparent style={styles.header}>
-                            <Text> Taaasty and we love it </Text>
+                            <View style={styles.headerText}>
+                                <Text style={APPSTYLE.normalText}> Taaasty and we love it </Text>
+                            </View>
+                            <TouchableOpacity style={styles.subIcon}>
+                                <Icon style={{ color: '#324291' }} type="FontAwesome" name="bell" />
+                            </TouchableOpacity>
                         </Header>
                         <View style={styles.listHolder}>
                             {!this.props.loading && <FlatList data={this.props.items}
@@ -72,8 +90,17 @@ class FoodFeed extends Component {
 }
 const styles = StyleSheet.create({
     header: {
+
+    },
+    headerText: {
+        top: 0,
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    subIcon: {
+        marginRight: 10,
+        justifyContent: 'center',
     },
     content: {
         flex: 1,

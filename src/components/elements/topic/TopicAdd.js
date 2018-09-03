@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Container, Content, Header, Form, Item, Label, Input, Textarea, Button } from 'native-base';
 import BackgroundView from '../view/BackgroundView';
-import { choseMedia } from '../../upload/mediaChooser';
-import { getWidth } from '../../../screenManager';
 import { myFetch } from '../../../api/utils';
 import { CREATE_POST_SERVICE } from '../../../api/api';
 import { connect } from 'react-redux';
 import { navigate } from '../../router/NavigationService';
 import TopicMediaChooser from './TopicMediaChooser';
+import { showToast } from '../../toast/rafToast';
+import { errorToast } from '../../toast/consts';
 class TopicAdd extends Component {
     static navigationOptions = {
         header: null,
@@ -19,10 +19,9 @@ class TopicAdd extends Component {
             title: '',
             textContent: '',
             mediaContent: { uri: null },
-
         }
-        this.category = this.props.navigation.getParam('category');
-        if (this.category == null) {
+
+        if (this.props.category == null) {
             console.error('CAtegory not suplied');
         }
     }
@@ -34,10 +33,10 @@ class TopicAdd extends Component {
     }
     savePost = async () => {
         if (this.state.title.length == 0) {
-            console.error('MUst titlt lol');
+            showToast(errorToast('Your post should have a title'));
         }
         let reqData = {
-            category: this.category,
+            category: this.props.category,
             textContent: this.state.textContent,
             title: this.state.title,
             userId: this.props.user._id,
@@ -49,9 +48,10 @@ class TopicAdd extends Component {
                 let { _id } = response.post;
                 navigate('TopicView', { topic_id: _id });
             } else {
-                console.log('ERRORR', response)
+                showToast(errorToast());
             }
         } catch (error) {
+            showToast(errorToast());
             console.error(error);
         }
     }
@@ -63,7 +63,7 @@ class TopicAdd extends Component {
     }
 
     mediaChooseFail = (data) => {
-        console.log('Fail stuff', data);
+        showToast(errorToast('Error media chooser' + data));
     }
 
     render() {
@@ -72,7 +72,7 @@ class TopicAdd extends Component {
                 <BackgroundView>
                     <Content contentContainerStyle={styles.content}>
                         <Header transparent style={styles.header}>
-                            <Text> Add a new post to {this.category} </Text>
+                            <Text> Add a new post to {this.props.category} </Text>
                         </Header>
                         <Form>
                             <Item floatingLabel>

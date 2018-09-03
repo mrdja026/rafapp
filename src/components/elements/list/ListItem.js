@@ -37,7 +37,7 @@ const ListItem = (props) => {
     }
 
     return (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row'}}>
             <View style={{ flex: 2 }}>
                 <VotingComponent
                     score={props.data.score}
