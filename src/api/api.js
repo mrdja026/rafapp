@@ -14,3 +14,5 @@ export const GET_ALL_COMMENT_SERVICE = 'http://10.0.2.2:3000/comment/getAll';
 export const VOTE_POST_SERVICE = 'http://10.0.2.2:3000/post/vote';
 export const SUBSCRIBE_TOPIC = 'http://10.0.2.2:3000/sub/registerTopicSubscription';
 export const UNSUBSCRIBE_TOPIC = 'http://10.0.2.2:3000/sub/cancelTopicSubscription';
+export const GET_MY_SUB = 'http://10.0.2.2:3000/sub/getMySub';
+

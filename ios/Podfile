@@ -25,4 +25,6 @@ target 'rafreact' do
   pod 'Crashlytics', '~> 3.10.1'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+
 end

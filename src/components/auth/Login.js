@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native'
+import { StyleSheet, View, ImageBackground, Animated, Easing } from 'react-native'
 import { Container, Content, Button, Text, Form, Item, Input, Label, Spinner } from 'native-base';
+import LottieView from 'lottie-react-native';
 import { connect } from 'react-redux';
 import { login, userAuthChanged, checkUserCredentials } from './actionCreator';
 import { navigate, goBack } from '../router/NavigationService';
@@ -12,6 +13,7 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            progress: new Animated.Value(0),
             username: 'mrdjan1',
             password: 'smederevo026'
         }
@@ -47,6 +49,15 @@ class Login extends Component {
     resetPass = () => {
         //console.log('Reset pass?');
     }
+
+    _animStart = () => {
+        Animated.timing(this.state.progress, {
+            toValue: 1,
+            duration: 5000,
+            easing: Easing.linear,
+        }).start();
+    }
+
     render() {
         return (
             <Container>
@@ -54,6 +65,9 @@ class Login extends Component {
                     <BackgroundView>
                         <Content contentContainerStyle={styles.loginForm}>
                             <View style={{ flex: 1, justifyContent: 'center' }}>
+                                <View onLayout={this._animStart} style={{ flex: 1 }}>
+                                    <LottieView style={{}} source={require('../../../assets/logo/rafapp.json')} progress={this.state.progress} />
+                                </View>
                                 <Form style={styles.form}>
                                     <Item floatingLabel>
                                         <Label> Username </Label>

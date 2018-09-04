@@ -164,6 +164,8 @@ dependencies {
         transitive = false
     }
 
+    implementation project(':lottie-react-native')
+
     // RNFirebase required dependencies
     implementation "com.google.firebase:firebase-core:15.0.2"
     implementation "com.google.android.gms:play-services-base:15.0.0"

@@ -1,118 +1,65 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { Container, Header, Content, Icon } from 'native-base';
-import BackgroundView from '../elements/view/BackgroundView';
-import FeedFooter from '../elements/footer/FeedFooter';
 import { navigate } from '../router/NavigationService';
 import { connect } from 'react-redux';
 import { getFoodData } from './actionCreator';
-import ListItem from '../elements/list/ListItem';
-import FirebaseManager from '../../firebase';
-import APPSTYLE from '../../styles/style';
-import TopicAdd from '../elements/topic/TopicAdd';
+import AppFeed from '../elements/feed/AppFeed';
+import { myFetch } from '../../api/utils';
+import { GET_MY_SUB } from '../../api/api';
+import { showToast } from '../toast/rafToast';
+import { errorToast } from '../toast/consts';
 class FoodFeed extends Component {
     static navigationOptions = {
         header: null,
     }
-    onPress = () => {
-        let renderF = () => {
-            return (
-                <TopicAdd
-                    navigation={this.props.navigation}
-                    category={'Food'} />
-            )
-        }
-        this.props.navigation.navigate('Modal', {
-            renderFunction: () => {
-                return renderF();
+    constructor(props) {
+        super(props);
+        this.state = {
+            subscriptionStatus: {
+                loading: true,
+                subbed: false,
             }
-        });
+        }
     }
+
+    _getSubscriptionStatus = async () => {
+        try {
+            let result = await myFetch(GET_MY_SUB, { method: 'POST' }, { category: this.props.category });
+            console.log('resultat sub', result);
+            if (result.ok) {
+                this.setState({
+                    subscriptionStatus: {
+                        loading: false,
+                        subbed: result.sub != null
+                    }
+                })
+            }
+        } catch (error) {
+            console.error(error);
+            showToast(errorToast());
+        }
+
+    }
+
     componentDidMount() {
         if (this.props.items.length <= 0) {
             this.props.getData();
         }
+        this._getSubscriptionStatus();
     }
 
-    keyExtractor = (item, /*index*/) => {
-        return item._id;
-    }
-
-    listItemOnPress = (id) => {
-        navigate('TopicView', { topic_id: id });
-
-    }
-
-    renderItem = ({ item }) => {
+    render() {
         return (
-            <ListItem
-                id={item._id}
-                title={item.title}
-                data={item}
-                onPress={this.listItemOnPress}
+            <AppFeed
+                subbed={this.state.subscriptionStatus}
+                loading={this.props.loading}
+                items={this.props.items}
+                category={'Food'}
+                title={'Tasty and we love it!'}
             />
         )
     }
-
-    renderSeparator = () => {
-        return (
-            <View style={{ flex: 1, height: 2, backgroundColor: "#324291" }}>
-            </View>
-        )
-    }
-    render() {
-        return (
-            <Container>
-                <BackgroundView>
-                    <Content contentContainerStyle={styles.content}>
-                        <Header transparent style={styles.header}>
-                            <View style={styles.headerText}>
-                                <Text style={APPSTYLE.normalText}> Taaasty and we love it </Text>
-                            </View>
-                            <TouchableOpacity style={styles.subIcon}>
-                                <Icon style={{ color: '#324291' }} type="FontAwesome" name="bell" />
-                            </TouchableOpacity>
-                        </Header>
-                        <View style={styles.listHolder}>
-                            {!this.props.loading && <FlatList data={this.props.items}
-                                keyExtractor={this.keyExtractor}
-                                renderItem={this.renderItem}
-                                ItemSeparatorComponent={this.renderSeparator}
-                            />}
-                            {this.props.loading && <ActivityIndicator size={30} color={'blue'} />}
-                        </View>
-                        <FeedFooter category={'Food'} onPress={this.onPress} />
-                    </Content>
-                </BackgroundView>
-            </Container>
-        );
-    }
 }
-const styles = StyleSheet.create({
-    header: {
 
-    },
-    headerText: {
-        top: 0,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    subIcon: {
-        marginRight: 10,
-        justifyContent: 'center',
-    },
-    content: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    listHolder: {
-        flex: 1,
-        marginLeft: 10,
-        marginRight: 10,
-    }
-});
 mapStateToProps = (state) => {
     let { food } = state.food;
     return {
@@ -124,5 +71,4 @@ mapDispatchToProps = (dispatch) => {
         getData: (data) => (dispatch(getFoodData(data))),
     }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(FoodFeed);

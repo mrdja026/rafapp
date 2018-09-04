@@ -37,7 +37,7 @@ const ListItem = (props) => {
     }
 
     return (
-        <View style={{ flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
             <View style={{ flex: 2 }}>
                 <VotingComponent
                     score={props.data.score}
@@ -45,7 +45,7 @@ const ListItem = (props) => {
                     decrementScore={this.decrementPostScore}
                 />
             </View>
-            <View style={{ flex: 8 }}>
+            <View style={{ flex: 8, justifyContent: 'center' }}>
                 <TouchableOpacity onPress={onPress} style={styles.container}>
                     <View style={{ flexDirection: 'row' }}>
                         {props.data.mediaContent && <Image style={styles.picture} source={{ uri: props.data.mediaContentThumb }} />}
