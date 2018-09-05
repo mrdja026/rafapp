@@ -53,9 +53,7 @@ class AppFeed extends Component {
         )
     }
 
-    _toggleSubscription = async () => {
-        let result = await myFetch(SUBSCRIBE_TOPIC, { method: 'POST' }, { category: FOOD_TYPE })
-    }
+    
 
     render() {
         return (
@@ -64,7 +62,7 @@ class AppFeed extends Component {
                     <Content contentContainerStyle={styles.content}>
                         <DefaultFeedHeader
                             subbed={this.props.subbed}
-                            toggleSubscription={this._toggleSubscription}
+                            toggleSubscription={this.props.toggleSubscription}
                             title={this.props.title} />
                         <View style={styles.listHolder}>
                             {!this.props.loading && <FlatList data={this.props.items}

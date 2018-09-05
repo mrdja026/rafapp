@@ -6,6 +6,27 @@ class FirebaseManager {
         this.notificationListener = null;
         this.onNotificationDisplayedListener = null;
         this.notificationOpenedListener = null;
+        this.onTokenListener = null;
+        this.userToken = null;
+    }
+
+    getUserToken = () => {
+        return this.userToken;
+    }
+    setUserToken = (token) => {
+        this.userToken = token;
+    }
+
+    getToken = async () => {
+        let promise = new Promise(async (resolve, reject) => {
+            try {
+                let result = await firebase.messaging().getToken();
+                return resolve(result);
+            } catch (error) {
+                return reject(error);
+            }
+        });
+        return promise;
     }
 
 
@@ -26,8 +47,9 @@ class FirebaseManager {
                 this.onNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notificationDisplayed) => {
                     console.log('notification displayed', notificationDisplayed)
                 });
-
-
+                this.onTokenListener = firebase.messaging().onTokenRefresh(newToken => {
+                    this.setUserToken(newToken);
+                });
                 this.hasPermissions = true;
             } catch (error) {
                 return reject(error);
@@ -65,6 +87,7 @@ class FirebaseManager {
         this.notificationListener();
         this.onNotificationDisplayedListener();
         this.notificationOpenedListener();
+        this.onTokenListener();
     }
 
     getInitialNotification = async () => {

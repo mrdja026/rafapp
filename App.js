@@ -4,6 +4,10 @@ import store from './src/store';
 import { StyleSheet, View, ScrollView, Dimensions } from 'react-native';
 import AppNavigator from './src/components/router/router';
 console.disableYellowBox = true;
+if (!__DEV__) {
+  console.log = () => { };
+  console.error = () => { };
+}
 export default class App extends React.Component {
   constructor() {
     super();

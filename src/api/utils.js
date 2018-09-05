@@ -6,22 +6,25 @@ const DELETE = 'DELETE'//hehe
 export const myFetch = async (service, requestConfig, requestParams) => {
     let requestData = getRequestData(requestConfig, requestParams);
     console.log('Request to be made', service, requestData);
-    let promise = new Promise((resolve, reject) => {
-        fetch(service, requestData).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                reject(response);
-            }
-        }).then(responseJson => {
-            resolve(responseJson);
-        }).catch(error => {
-            let _error = 'Error parsing json' + error;
-            reject(_error);
+    try {
+        let promise = new Promise((resolve, reject) => {
+            fetch(service, requestData).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    reject(response);
+                }
+            }).then(responseJson => {
+                resolve(responseJson);
+            }).catch((error) => {
+                reject(error);
+            });
         });
-    });
-    let result = await promise;
-    return result;
+        let result = await promise;
+        return result;
+    } catch (error) {
+        throw Error(error);
+    }
 }
 
 const getRequestData = (requestConfig, requestParams) => {

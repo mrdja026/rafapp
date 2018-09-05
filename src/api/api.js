@@ -16,3 +16,5 @@ export const SUBSCRIBE_TOPIC = 'http://10.0.2.2:3000/sub/registerTopicSubscripti
 export const UNSUBSCRIBE_TOPIC = 'http://10.0.2.2:3000/sub/cancelTopicSubscription';
 export const GET_MY_SUB = 'http://10.0.2.2:3000/sub/getMySub';
 
+export const DEVICE_REGISTER_TOKEN = 'http://10.0.2.2:3000/registerToken'
+

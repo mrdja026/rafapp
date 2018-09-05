@@ -11,7 +11,7 @@ const DefaultFeedHeader = (props) => {
                 {props.subbed.loading && <ActivityIndicator color={'blue'} size={25} />}
                 {!props.subbed.loading && <View>
                     {props.subbed.subbed && <Icon style={{ color: '#324291' }} type="FontAwesome" name="bell" />}
-                    {!props.subbed.subbed && <Icon style={{ color: '#324291' }} type="FontAwesome" name="pencil" />}
+                    {!props.subbed.subbed && <Icon style={{ color: '#324291' }} type="FontAwesome" name="bell-slash" />}
                 </View>}
             </TouchableOpacity>
         </Header>
